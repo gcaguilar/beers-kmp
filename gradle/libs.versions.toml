@@ -19,7 +19,7 @@ koin = "3.2.0"
 koin-compose-mp = "1.1.5"
 coroutines = "1.7.3"
 logger = "1.5.6"
-kamel = "0.9.3"
+kamel = "0.9.4"
 voyager = "1.0.0"
 
 [libraries]

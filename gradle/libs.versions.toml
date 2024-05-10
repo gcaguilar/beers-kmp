@@ -19,11 +19,15 @@ kotlin = "1.9.22"
 ktor = "2.3.10"
 =======
 ktor = "2.3.11"
+<<<<<<< HEAD
 kotlin = "1.9.24"
 >>>>>>> c3cf30a (Update ktor to v2.3.11)
+=======
+kotlin = "2.0.0"
+>>>>>>> 0cad37b (Update kotlin monorepo to v2)
 koin = "3.5.6"
 koin-compose-mp = "1.1.5"
-coroutines = "1.8.0"
+coroutines = "1.8.1"
 logger = "1.5.6"
 kamel = "0.9.4"
 =======

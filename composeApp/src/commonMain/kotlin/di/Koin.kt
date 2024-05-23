@@ -2,7 +2,6 @@ package di
 
 
 import data.SearchRepositoryImpl
-import presentation.search.SearchViewModel
 import data.UntappdService
 import domain.GetBeerDetail
 import domain.SearchBeer
@@ -16,9 +15,12 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.serialization.json.Json
+import org.koin.compose.viewmodel.dsl.viewModelOf
 import org.koin.core.context.startKoin
 import org.koin.dsl.module
 import presentation.detail.DetailViewModel
+import presentation.brewery.BreweryDetailViewModel
+import presentation.search.SearchViewModel
 
 fun initKoin() =
     startKoin {
@@ -26,18 +28,9 @@ fun initKoin() =
     }
 
 private val presentationModule = module {
-    single {
-        SearchViewModel(
-            searchBeer = get(),
-            coroutineScope = get()
-        )
-    }
-    single {
-        DetailViewModel(
-            getBeerDetail = get(),
-            coroutineScope = get()
-        )
-    }
+    viewModelOf(::SearchViewModel)
+    viewModelOf (::DetailViewModel)
+    viewModelOf (::BreweryDetailViewModel)
 }
 
 private val domainModule = module {

@@ -1,5 +1,6 @@
 package presentation.search
 
+import androidx.lifecycle.ViewModel
 import domain.Beer
 import domain.SearchBeer
 import kotlinx.coroutines.CoroutineScope
@@ -20,8 +21,8 @@ sealed class UIState {
 class SearchViewModel(
     private val searchBeer: SearchBeer,
     private val coroutineScope: CoroutineScope
-) : KoinComponent {
-    private val _uiState: MutableStateFlow<UIState> = MutableStateFlow(UIState.Loading)
+) : ViewModel(), KoinComponent {
+    private val _uiState: MutableStateFlow<UIState> =MutableStateFlow(UIState.Loading)
     val uiState: StateFlow<UIState> = _uiState
 
     fun searchBeer() {

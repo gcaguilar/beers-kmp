@@ -1,5 +1,6 @@
 package presentation.detail
 
+import androidx.lifecycle.ViewModel
 import domain.GetBeerDetail
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,7 +21,7 @@ sealed class UIState {
 class DetailViewModel(
     private val getBeerDetail: GetBeerDetail,
     private val coroutineScope: CoroutineScope
-) : KoinComponent {
+) : ViewModel(), KoinComponent {
     private val _uiState: MutableStateFlow<UIState> = MutableStateFlow(UIState.Loading)
     val uiState: StateFlow<UIState> = _uiState
 

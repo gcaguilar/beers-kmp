@@ -1,22 +1,17 @@
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.*
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.navigator.CurrentScreen
 import cafe.adriel.voyager.navigator.Navigator
-import org.jetbrains.compose.resources.ExperimentalResourceApi
-import org.jetbrains.compose.resources.imageResource
-import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
-import presentation.detail.DetailScreen
 import presentation.search.SearchScreen
+import presentation.ui.BackNavigationIcon
+import presentation.ui.CustomAppBar
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 @Preview
 fun App() {
@@ -25,19 +20,13 @@ fun App() {
             Scaffold(
                 modifier = Modifier.fillMaxSize(),
                 topBar = {
-                    TopAppBar(
-                        title = { Text("Untappd") },
+                    CustomAppBar(
                         navigationIcon = {
-                            IconButton(onClick = {
-                                navigator.pop()
-                            }) {
-                                Icon(
-                                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                    contentDescription = null
-                                )
-                            }
-                        }
-                    )
+                          if (navigator.lastItem::class.simpleName != SearchScreen::class.simpleName) {
+                               BackNavigationIcon(onClickIconButton = { navigator.pop() })
+                          }
+                      }
+                  )
                 },
                 content = {
                     Box(Modifier.padding(it)) {

@@ -1,17 +1,16 @@
 package presentation.search
 
-import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
@@ -27,6 +26,8 @@ object SearchScreen: Screen, KoinComponent {
     }
 }
 
+private const val SearchKey = "Search"
+
 @Composable
 fun SearchScreenContent(viewModel: SearchViewModel = koinInject<SearchViewModel>()) {
     val state = viewModel.uiState.collectAsState().value
@@ -34,7 +35,9 @@ fun SearchScreenContent(viewModel: SearchViewModel = koinInject<SearchViewModel>
     
     Column(
         modifier = Modifier.fillMaxSize()
-            .padding(horizontal = 16.dp)
+            .padding(horizontal = 16.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         when (state) {
             is UIState.Error -> Text("Error")
@@ -50,7 +53,7 @@ fun SearchScreenContent(viewModel: SearchViewModel = koinInject<SearchViewModel>
         }
     }
 
-    LaunchedEffect(key1 = "Search") {
+    LaunchedEffect(key1 = SearchKey) {
         viewModel.searchBeer()
     }
 }

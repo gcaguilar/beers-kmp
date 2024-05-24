@@ -28,6 +28,7 @@ koin-compose-mp = "1.1.5"
 koin-compose-vm = "1.2.0-Beta4"
 coroutines = "1.8.1"
 logger = "1.5.6"
+<<<<<<< HEAD
 kamel = "0.9.4"
 =======
 kotlin = "1.9.24"
@@ -38,8 +39,11 @@ coroutines = "1.7.3"
 logger = "1.5.3"
 kamel = "0.9.3"
 >>>>>>> 456b891 (Update kotlin monorepo to v1.9.24)
+=======
+kamel = "0.9.5"
+>>>>>>> 0e07c2a (Update dependency media.kamel:kamel-image to v0.9.5)
 voyager = "1.0.0"
-detekt = "1.23.3"
+detekt = "1.23.6"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }

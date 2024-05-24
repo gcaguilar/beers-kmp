@@ -47,6 +47,7 @@ kotlin {
             implementation(libs.ktor.client.content.negotiation)
             implementation(libs.koin.core)
             implementation(libs.kotlinx.coroutines.core)
+            implementation(libs.kotlinx.coroutines.swing)
             implementation(libs.logback.classic)
             implementation(libs.kamel.image)
             implementation(libs.voyager.navigator)
@@ -88,8 +89,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     dependencies {
         debugImplementation(libs.compose.ui.tooling)

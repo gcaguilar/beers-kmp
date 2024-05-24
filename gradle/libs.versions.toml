@@ -42,14 +42,15 @@ ktor-client-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktor" }
 ktor-client-mock = { module = "io.ktor:ktor-client-mock", version.ref = "ktor" }
 ktor-client-darwin = { module = "io.ktor:ktor-client-darwin", version.ref = "ktor" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
+kotlinx-coroutines-swing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", version.ref = "coroutines" }
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
 ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
 ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
-logback-classic = { module = "ch.qos.logback:logback-classic", version.ref="logger" }
-kamel-image = { module = "media.kamel:kamel-image", version.ref="kamel" }
-voyager-navigator = { module = "cafe.adriel.voyager:voyager-navigator", version.ref="voyager" }
-voyager-koin = { module = "cafe.adriel.voyager:voyager-koin", version.ref="voyager" }
-koin-compose = { module = "io.insert-koin:koin-compose", version.ref="koin-compose-mp" }
+logback-classic = { module = "ch.qos.logback:logback-classic", version.ref = "logger" }
+kamel-image = { module = "media.kamel:kamel-image", version.ref = "kamel" }
+voyager-navigator = { module = "cafe.adriel.voyager:voyager-navigator", version.ref = "voyager" }
+voyager-koin = { module = "cafe.adriel.voyager:voyager-koin", version.ref = "voyager" }
+koin-compose = { module = "io.insert-koin:koin-compose", version.ref = "koin-compose-mp" }
 koin-compose-vm = { module = "io.insert-koin:koin-compose-viewmodel", version.ref = "koin-compose-vm" }
 
 [plugins]

@@ -6,16 +6,18 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class LocationResponse(
-    @SerialName("brewery_address") val breweryAddress: String,
+    @SerialName("brewery_address") val breweryAddress: String? = null,
     @SerialName("brewery_city") val breweryCity: String,
     @SerialName("brewery_state") val breweryState: String,
-    @SerialName("brewery_lat") val breweryLat: Double,
-    @SerialName("brewery_lng") val breweryLng: Double
+    @SerialName("brewery_lat") val breweryLat: Double? = null,
+    @SerialName("brewery_lng") val breweryLng: Double? = null,
+    @SerialName("lat") val lat: Double?,
+    @SerialName("lng") val lng: Double?
 )
 
 fun LocationResponse.toLocation() = Location(
     city = breweryCity,
-    lng = breweryAddress,
     state = breweryState,
-    lat = "",
+    lat = breweryLat ?: lat!!,
+    lng = breweryLat ?: lng!!
 )

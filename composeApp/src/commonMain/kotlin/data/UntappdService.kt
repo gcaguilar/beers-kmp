@@ -1,7 +1,9 @@
 package data
 
-import io.ktor.client.*
-import io.ktor.http.*
+import io.ktor.client.HttpClient
+import io.ktor.http.HttpMethod
+import io.ktor.http.URLProtocol
+import io.ktor.http.appendPathSegments
 
 private const val BASE_URL = "api.untappd.com"
 private const val V4 = "v4"

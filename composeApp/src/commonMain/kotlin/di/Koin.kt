@@ -4,6 +4,7 @@ package di
 import data.SearchRepositoryImpl
 import data.UntappdService
 import domain.GetBeerDetail
+import domain.GetBreweryDetail
 import domain.SearchBeer
 import domain.SearchRepository
 import io.ktor.client.HttpClient
@@ -21,7 +22,7 @@ import kotlinx.serialization.json.Json
 import org.koin.compose.viewmodel.dsl.viewModelOf
 import org.koin.core.context.startKoin
 import org.koin.dsl.module
-import presentation.detail.DetailViewModel
+import presentation.beer.DetailViewModel
 import presentation.brewery.BreweryDetailViewModel
 import presentation.search.SearchViewModel
 
@@ -32,8 +33,8 @@ fun initKoin() =
 
 private val presentationModule = module {
     viewModelOf(::SearchViewModel)
-    viewModelOf (::DetailViewModel)
-    viewModelOf (::BreweryDetailViewModel)
+    viewModelOf(::DetailViewModel)
+    viewModelOf(::BreweryDetailViewModel)
 }
 
 private val domainModule = module {
@@ -42,9 +43,14 @@ private val domainModule = module {
             searchRepository = get()
         )
     }
-    
+
     factory {
         GetBeerDetail(
+            searchRepository = get()
+        )
+    }
+    factory {
+        GetBreweryDetail(
             searchRepository = get()
         )
     }
@@ -54,9 +60,9 @@ private val dataModule = module {
     factory<SearchRepository> {
         SearchRepositoryImpl(
             service = get()
-        )   
+        )
     }
-    
+
     single {
         UntappdService(
             ktorClient = get()
@@ -83,6 +89,4 @@ private val networkModule = module {
             }
         }
     }
-
-    single { CoroutineScope(Dispatchers.Default + SupervisorJob()) }
 }

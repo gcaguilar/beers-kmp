@@ -1,6 +1,7 @@
-package presentation.detail
+package presentation.beer
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import domain.GetBeerDetail
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,13 +21,12 @@ sealed class UIState {
 
 class DetailViewModel(
     private val getBeerDetail: GetBeerDetail,
-    private val coroutineScope: CoroutineScope
 ) : ViewModel(), KoinComponent {
     private val _uiState: MutableStateFlow<UIState> = MutableStateFlow(UIState.Loading)
     val uiState: StateFlow<UIState> = _uiState
 
     fun getBeer(bid: String) {
-        coroutineScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             getBeerDetail(bid).fold(
                 onFailure = { _ ->
                     _uiState.update {

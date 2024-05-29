@@ -1,6 +1,7 @@
 package data
 
 import domain.Beer
+import domain.BeersWithPagination
 import domain.BrewerySummary
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -13,7 +14,7 @@ data class SearchBeerResponse(
 @Serializable
 data class Homebrew(
     @SerialName("count") val count: Int,
-   @SerialName("items") val items: List<String>
+    @SerialName("items") val items: List<String>
 )
 
 @Serializable
@@ -94,8 +95,15 @@ data class BeerBeerItemResponse(
     @SerialName("beer_name") val beerName: String
 )
 
-fun SearchBeerResponse.toBeerList(): List<Beer> {
-    return response.beers.items.map {
+fun SearchBeerResponse.toBeersWithPagination(): BeersWithPagination {
+    return BeersWithPagination(
+        nextPage = this.calculateNextPage(),
+        beerList = this.toBeers()
+    )
+}
+
+private fun SearchBeerResponse.toBeers(): List<Beer> {
+    return this.response.beers.items.map {
         it.toBeer()
     }
 }
@@ -115,3 +123,17 @@ private fun BreweryItemResponse.toBrewerySummary(): BrewerySummary = BrewerySumm
     id = breweryId,
     name = breweryName
 )
+
+private fun SearchBeerResponse.calculateNextPage(): Int? {
+    val offset = response.offset
+    val limit = response.limit
+    val found = response.found
+    val currentCount = offset + response.beers.items.size
+
+    return if (currentCount >= found) {
+        null
+    } else {
+        val nextPage = (currentCount / limit) + 1
+        nextPage * limit
+    }
+}

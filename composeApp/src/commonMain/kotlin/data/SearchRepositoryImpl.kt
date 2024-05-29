@@ -1,7 +1,7 @@
 package data
 
-import domain.Beer
 import domain.BeerDetail
+import domain.BeersWithPagination
 import domain.Brewery
 import domain.SearchRepository
 import org.koin.core.component.KoinComponent
@@ -9,9 +9,14 @@ import org.koin.core.component.KoinComponent
 class SearchRepositoryImpl(
     private val service: UntappdService
 ) : SearchRepository, KoinComponent {
-    override suspend fun search(name: String): Result<List<Beer>> {
-        return service.searchBeer(name)
-            .mapCatching { it.toBeerList() }
+    override suspend fun search(searchName: String): Result<BeersWithPagination> {
+        return service.searchBeer(searchName)
+            .mapCatching { it.toBeersWithPagination() }
+    }
+
+    override suspend fun search(searchName: String, offset: Int): Result<BeersWithPagination> {
+        return service.searchBeer(searchName, offset)
+            .mapCatching { it.toBeersWithPagination() }
     }
 
     override suspend fun getBeer(bid: String): Result<BeerDetail> {

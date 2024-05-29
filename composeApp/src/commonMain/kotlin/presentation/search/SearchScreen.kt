@@ -68,13 +68,14 @@ fun SearchScreenContent(viewModel: SearchViewModel = koinInject<SearchViewModel>
                     state.searchResult?.isEmpty() == true -> Text("Empty")
                     else -> {
                         Column {
-                            InfiniteStaggedGridList(
+                            InfiniteStagedGridList(
                                 modifier = Modifier
                                     .padding(vertical = 16.dp)
                                     .weight(1f),
                                 beerList = state.searchResult ?: emptyList(),
                                 listState = listState,
                                 lastScrollPosition = lastScrollPosition,
+                                isRequestingMoreItems = state.isRequestingMoreItems,
                                 onClick = {
                                     navigator.push(DetailScreen(it))
                                 },

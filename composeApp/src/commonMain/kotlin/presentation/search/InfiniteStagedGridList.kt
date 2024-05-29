@@ -10,20 +10,23 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import domain.Beer
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
-import org.jetbrains.compose.ui.tooling.preview.Preview
 import presentation.ui.BeerItem
 
+const val InfiniteStagedGridListTag = "InfiniteStagedGridList"
+
 @Composable
-@Preview
-fun InfiniteStaggedGridList(
+fun InfiniteStagedGridList(
     lastScrollPosition: Int,
     beerList: List<Beer>,
+    buffer: Int = 5,
     canRequestMoreData: Boolean = false,
+    isRequestingMoreItems: Boolean = false,
     onClick: (bid: String) -> Unit,
     onLoadMore: () -> Unit,
     updateLastScrollPosition: (Int) -> Unit,
@@ -31,7 +34,8 @@ fun InfiniteStaggedGridList(
     modifier: Modifier = Modifier
 ) {
     LazyVerticalStaggeredGrid(
-        modifier = modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize()
+            .testTag(InfiniteStagedGridListTag),
         horizontalArrangement = Arrangement.spacedBy(16.dp),
         verticalItemSpacing = 16.dp,
         state = listState,
@@ -54,9 +58,6 @@ fun InfiniteStaggedGridList(
                     )
                 }
             }
-            if (index == beerList.size - 1) {
-                onLoadMore()
-            }
         }
     }
 
@@ -64,16 +65,16 @@ fun InfiniteStaggedGridList(
         snapshotFlow { listState.layoutInfo.visibleItemsInfo }
             .map { visibleItems ->
                 val lastVisibleItem = visibleItems.lastOrNull()
-                val atEnd = lastVisibleItem?.index == listState.layoutInfo.totalItemsCount - 1
-                val scrollingUp = listState.firstVisibleItemIndex < lastScrollPosition
-                updateLastScrollPosition(listState.firstVisibleItemIndex)
-                Pair(atEnd, scrollingUp)
+                val atEnd = (lastVisibleItem?.index ?: 0) >= listState.layoutInfo.totalItemsCount - buffer
+                val scrollingDown = listState.firstVisibleItemIndex > lastScrollPosition
+                Pair(atEnd, scrollingDown)
             }
             .distinctUntilChanged()
-            .collectLatest { (atEnd, scrollingUp) ->
-                if (atEnd && !scrollingUp && canRequestMoreData) {
+            .collectLatest { (atEnd, scrollingDown) ->
+                if (atEnd && scrollingDown && canRequestMoreData && !isRequestingMoreItems) {
                     onLoadMore()
                 }
+                updateLastScrollPosition(listState.firstVisibleItemIndex)
             }
     }
 }

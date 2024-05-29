@@ -22,11 +22,11 @@ fun App() {
                 topBar = {
                     CustomAppBar(
                         navigationIcon = {
-                          if (navigator.lastItem::class.simpleName != SearchScreen::class.simpleName) {
-                               BackNavigationIcon(onClickIconButton = { navigator.pop() })
-                          }
-                      }
-                  )
+                            if (navigator.lastItem::class.simpleName != SearchScreen::class.simpleName) {
+                                BackNavigationIcon(onClickIconButton = { navigator.pop() })
+                            }
+                        }
+                    )
                 },
                 content = {
                     Box(Modifier.padding(it)) {

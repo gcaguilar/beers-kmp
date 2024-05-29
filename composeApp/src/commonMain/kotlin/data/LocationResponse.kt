@@ -11,8 +11,8 @@ data class LocationResponse(
     @SerialName("brewery_state") val breweryState: String,
     @SerialName("brewery_lat") val breweryLat: Double? = null,
     @SerialName("brewery_lng") val breweryLng: Double? = null,
-    @SerialName("lat") val lat: Double?,
-    @SerialName("lng") val lng: Double?
+    @SerialName("lat") val lat: Double? = null,
+    @SerialName("lng") val lng: Double? = null
 )
 
 fun LocationResponse.toLocation() = Location(

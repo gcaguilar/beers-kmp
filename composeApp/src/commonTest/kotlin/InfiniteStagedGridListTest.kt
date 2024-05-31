@@ -49,6 +49,60 @@ class InfiniteStagedGridListTest {
     }
 
     @Test
+    fun `Should not call onLoadMore when scroll to item out of buffer but there arent more pages`() = runComposeUiTest {
+        val beerList = DummyBeer.generateFakeBeers(StandardSizeList).toMutableList()
+        val onLoadMore: () -> Unit = { beerList.addAll(beerList) }
+
+        setContent {
+            val listState = rememberLazyStaggeredGridState()
+
+            Box(Modifier.size(400.dp, 800.dp)) {
+                InfiniteStagedGridList(
+                    beerList = beerList,
+                    canRequestMoreData = false,
+                    isRequestingMoreItems = false,
+                    onClick = { /*...*/ },
+                    onLoadMore = onLoadMore,
+                    listState = listState,
+                    scrollingDown = !listState.isScrollingUp(),
+                    modifier = Modifier
+                )
+            }
+        }
+
+        onNodeWithTag(InfiniteStagedGridListTag).performScrollToIndex(FirstScrollOutOfBuffer)
+
+        assertEquals(StandardSizeList, beerList.size)
+    }
+
+    @Test
+    fun `Should not call onLoadMore when scroll to item out of buffer but is requesting more data`() = runComposeUiTest {
+        val beerList = DummyBeer.generateFakeBeers(StandardSizeList).toMutableList()
+        val onLoadMore: () -> Unit = { beerList.addAll(beerList) }
+
+        setContent {
+            val listState = rememberLazyStaggeredGridState()
+
+            Box(Modifier.size(400.dp, 800.dp)) {
+                InfiniteStagedGridList(
+                    beerList = beerList,
+                    canRequestMoreData = true,
+                    isRequestingMoreItems = true,
+                    onClick = { /*...*/ },
+                    onLoadMore = onLoadMore,
+                    listState = listState,
+                    scrollingDown = !listState.isScrollingUp(),
+                    modifier = Modifier
+                )
+            }
+        }
+
+        onNodeWithTag(InfiniteStagedGridListTag).performScrollToIndex(FirstScrollOutOfBuffer)
+
+        assertEquals(StandardSizeList, beerList.size)
+    }
+
+    @Test
     fun `Should not call onLoadMore when scroll to item inside buffer`() = runComposeUiTest {
         val beerList = DummyBeer.generateFakeBeers(StandardSizeList).toMutableList()
         val onLoadMore: () -> Unit = { beerList.addAll(beerList) }

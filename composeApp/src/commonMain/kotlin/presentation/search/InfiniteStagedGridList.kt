@@ -6,15 +6,13 @@ import androidx.compose.foundation.lazy.staggeredgrid.LazyStaggeredGridState
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.material3.Card
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.snapshotFlow
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import domain.Beer
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import presentation.ui.BeerItem
 
@@ -22,16 +20,15 @@ const val InfiniteStagedGridListTag = "InfiniteStagedGridList"
 
 @Composable
 fun InfiniteStagedGridList(
-    lastScrollPosition: Int,
+    scrollingDown: Boolean,
     beerList: List<Beer>,
     buffer: Int = 5,
-    canRequestMoreData: Boolean = false,
-    isRequestingMoreItems: Boolean = false,
+    canRequestMoreData: Boolean,
+    isRequestingMoreItems: Boolean,
     onClick: (bid: String) -> Unit,
     onLoadMore: () -> Unit,
-    updateLastScrollPosition: (Int) -> Unit,
     listState: LazyStaggeredGridState,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     LazyVerticalStaggeredGrid(
         modifier = modifier.fillMaxSize()
@@ -43,7 +40,7 @@ fun InfiniteStagedGridList(
     ) {
         items(
             count = beerList.size,
-            key = { index -> beerList[index].bid }
+//            key = { index -> beerList[index].bid }
         ) { index ->
             Card {
                 with(beerList[index]) {
@@ -61,20 +58,42 @@ fun InfiniteStagedGridList(
         }
     }
 
-    LaunchedEffect(listState) {
-        snapshotFlow { listState.layoutInfo.visibleItemsInfo }
-            .map { visibleItems ->
-                val lastVisibleItem = visibleItems.lastOrNull()
-                val atEnd = (lastVisibleItem?.index ?: 0) >= listState.layoutInfo.totalItemsCount - buffer
-                val scrollingDown = listState.firstVisibleItemIndex > lastScrollPosition
-                Pair(atEnd, scrollingDown)
-            }
-            .distinctUntilChanged()
-            .collectLatest { (atEnd, scrollingDown) ->
-                if (atEnd && scrollingDown && canRequestMoreData && !isRequestingMoreItems) {
-                    onLoadMore()
+    if (scrollingDown && !isRequestingMoreItems) {
+        LaunchedEffect(listState) {
+            snapshotFlow { listState.layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: 0 }
+                .map { lastVisibleItem ->
+                    if (listState.layoutInfo.totalItemsCount > 0) {
+                        lastVisibleItem >= listState.layoutInfo.totalItemsCount - buffer
+                    } else {
+                        false
+                    }
                 }
-                updateLastScrollPosition(listState.firstVisibleItemIndex)
-            }
+                .collectLatest { requestMore ->
+                    if (requestMore && canRequestMoreData) {
+                        onLoadMore()
+                    }
+                }
+        }
     }
+}
+
+@Composable
+internal fun LazyStaggeredGridState.isScrollingUp(): Boolean {
+    var previousIndex by remember(this) { mutableStateOf(firstVisibleItemIndex) }
+    var previousScrollOffset by remember(this) { mutableStateOf(firstVisibleItemScrollOffset) }
+    val scrollOffsetThreshold = 10.dp // Adjust as needed
+    val scrollOffsetThresholdInPx = with(LocalDensity.current) { scrollOffsetThreshold.toPx() }
+
+    return remember(this) {
+        derivedStateOf {
+            if (previousIndex != firstVisibleItemIndex) {
+                previousIndex > firstVisibleItemIndex
+            } else {
+                firstVisibleItemScrollOffset - previousScrollOffset >= scrollOffsetThresholdInPx
+            }.also {
+                previousIndex = firstVisibleItemIndex
+                previousScrollOffset = firstVisibleItemScrollOffset
+            }
+        }
+    }.value
 }

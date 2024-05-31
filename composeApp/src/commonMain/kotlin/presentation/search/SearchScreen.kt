@@ -29,7 +29,6 @@ fun SearchScreenContent(viewModel: SearchViewModel = koinInject<SearchViewModel>
     val state = viewModel.uiState.collectAsState().value
     val navigator = LocalNavigator.currentOrThrow
     val listState = rememberLazyStaggeredGridState()
-    var lastScrollPosition by remember { mutableStateOf(0) }
 
     Column(
         modifier = Modifier.fillMaxSize()
@@ -48,7 +47,9 @@ fun SearchScreenContent(viewModel: SearchViewModel = koinInject<SearchViewModel>
                         viewModel.onClearInputText()
                     },
                     placeHolder = "Search",
-                    submitSearch = { viewModel.searchBeer() }
+                    submitSearch = {
+                        viewModel.searchBeer()
+                    }
                 )
             },
             resultContent = {
@@ -74,16 +75,14 @@ fun SearchScreenContent(viewModel: SearchViewModel = koinInject<SearchViewModel>
                                     .weight(1f),
                                 beerList = state.searchResult ?: emptyList(),
                                 listState = listState,
-                                lastScrollPosition = lastScrollPosition,
+                                canRequestMoreData = state.nextPage?.let { true } ?: false,
                                 isRequestingMoreItems = state.isRequestingMoreItems,
+                                scrollingDown = !listState.isScrollingUp(),
                                 onClick = {
                                     navigator.push(DetailScreen(it))
                                 },
                                 onLoadMore = {
                                     viewModel.requestNextPage()
-                                },
-                                updateLastScrollPosition = {
-                                    lastScrollPosition = it
                                 }
                             )
                             AnimatedVisibility(state.isRequestingMoreItems) {

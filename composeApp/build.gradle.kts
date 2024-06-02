@@ -11,6 +11,7 @@ plugins {
 }
 
 kotlin {
+    jvmToolchain(19)
     androidTarget()
     jvm("desktop")
 
@@ -104,11 +105,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
-    dependencies {
-        debugImplementation(libs.compose.ui.tooling)
+        sourceCompatibility = JavaVersion.VERSION_19
+        targetCompatibility = JavaVersion.VERSION_19
     }
 }
 
@@ -125,8 +123,8 @@ compose.desktop {
 }
 
 tasks.withType<io.gitlab.arturbosch.detekt.Detekt>().configureEach {
-    this.jvmTarget = "17"
+    this.jvmTarget = "19"
 }
 tasks.withType<io.gitlab.arturbosch.detekt.DetektCreateBaselineTask>().configureEach {
-    this.jvmTarget = "17"
+    this.jvmTarget = "19"
 }

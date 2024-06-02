@@ -15,26 +15,29 @@ kotlin {
     androidTarget()
     jvm("desktop")
 
-    listOf(
-        iosX64(),
-        iosArm64(),
-        iosSimulatorArm64()
-    ).forEach { iosTarget ->
-        iosTarget.binaries.framework {
-            baseName = "ComposeApp"
-            isStatic = true
-        }
-    }
+//    listOf(
+//        iosX64(),
+//        iosArm64(),
+//        iosSimulatorArm64()
+//    ).forEach { iosTarget ->
+//        iosTarget.binaries.framework {
+//            baseName = "ComposeApp"
+//            isStatic = true
+//        }
+//    }
 
     sourceSets {
         val desktopMain by getting
         val desktopTest by getting
 
         androidMain.dependencies {
-            implementation(libs.compose.ui.tooling.preview)
+            implementation(libs.compose.ui.tooling)
             implementation(libs.androidx.activity.compose)
-            implementation(libs.ktor.client.okhttp)
-            implementation(libs.kotlinx.coroutines.android)
+            implementation(libs.ktor.client.android)
+            implementation(libs.koin.core)
+            implementation(libs.koin.android)
+            implementation(libs.ktor.client.loggin)
+            implementation(libs.browser)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -46,12 +49,12 @@ kotlin {
             implementation(libs.ktor.client.core)
             implementation(libs.ktor.client.mock)
             implementation(libs.ktor.client.loggin)
+            implementation(libs.napier)
             implementation(libs.ktor.serialization.kotlinx.json)
             implementation(libs.ktor.client.content.negotiation)
             implementation(libs.koin.core)
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.kotlinx.coroutines.swing)
-            implementation(libs.logback.classic)
             implementation(libs.kamel.image)
             implementation(libs.voyager.navigator)
             implementation(libs.voyager.koin)

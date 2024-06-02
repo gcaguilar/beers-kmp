@@ -102,9 +102,13 @@ private val networkModule = module {
                 })
             }
             install(Logging) {
-                logger = Logger.SIMPLE
-                level = LogLevel.BODY
+                logger = object : Logger {
+                    override fun log(message: String) {
+                        Napier.v("HTTP Client", null, message)
+                    }
+                }
+                level = LogLevel.ALL
             }
-        }
+        }.also { Napier.base(DebugAntilog()) }
     }
 }

@@ -37,7 +37,6 @@ kotlin {
             implementation(libs.ktor.client.android)
             implementation(libs.koin.core)
             implementation(libs.koin.android)
-            implementation(libs.ktor.client.loggin)
             implementation(libs.browser)
         }
         commonMain.dependencies {
@@ -63,6 +62,7 @@ kotlin {
             implementation(libs.koin.compose.vm)
             api(libs.rinku)
             implementation(libs.rinku.compose)
+            implementation(libs.ksecurestorage)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)

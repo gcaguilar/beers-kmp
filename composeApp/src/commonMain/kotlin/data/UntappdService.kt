@@ -9,28 +9,25 @@ private const val BASE_URL = "api.untappd.com"
 private const val V4 = "v4"
 private const val SEARCH = "search"
 private const val BEER = "beer"
-private const val Brewery = "beer"
-private const val LIMIT = 50
+private const val Brewery = "brewery"
 private const val INFO = "info"
-private const val BID = "BID"
-
-private const val SEARCH_BEER_ENDPOINT = "${BASE_URL}${SEARCH}${BEER}"
 
 class UntappdService(
-    private val ktorClient: HttpClient
+    private val ktorClient: HttpClient,
+    private val secureStorage: SecureStorage
 ) {
-    suspend fun searchBeer(searchName: String): Result<SearchBeerResponse> {
+    suspend fun searchBeer(searchName: String, offset: Int? = null): Result<SearchBeerResponse> {
         return ktorClient.fetch {
             url {
-                protocol = URLProtocol.HTTP
-                port = 3000
-                host = "localhost"
+                protocol = URLProtocol.HTTPS
+                host = BASE_URL
                 method = HttpMethod.Get
                 appendPathSegments(V4, SEARCH, BEER)
-//                with(parameters) {
-//                    append("q", searchName)
-//                    append("access_token", " ")
-//                }
+                with(parameters) {
+                    append("q", searchName)
+                    offset?.let { append("offset", it.toString()) }
+                    append("access_token", secureStorage.getAccessToken())
+                }
             }
         }
     }
@@ -38,33 +35,29 @@ class UntappdService(
     suspend fun getBeerDetail(bid: String): Result<BeerDetailResponse> {
         return ktorClient.fetch {
             url {
-//                protocol = URLProtocol.HTTP
-                port = 3000
-//                host = "api.untappd.com"
-                host = "localhost"
+                protocol = URLProtocol.HTTPS
+                host = BASE_URL
                 method = HttpMethod.Get
                 appendPathSegments(V4, BEER, INFO, bid)
-//                with(parameters) {
-//                    append("access_token", " ")
-//                    append("compact", "true")
-//                }
+                with(parameters) {
+                    append("access_token", secureStorage.getAccessToken())
+                    append("compact", "true")
+                }
             }
         }
     }
-    
+
     suspend fun getBreweryDetail(id: String): Result<BreweryDetailResponse> {
         return ktorClient.fetch {
             url {
-                //                protocol = URLProtocol.HTTP
-                port = 3000
-                //                host = "api.untappd.com"
-                host = "localhost"
+                protocol = URLProtocol.HTTPS
+                host = BASE_URL
                 method = HttpMethod.Get
                 appendPathSegments(V4, Brewery, INFO, id)
-            //                with(parameters) {
-            //                    append("access_token", " ")
-            //                    append("compact", "true")
-            //                }
+                with(parameters) {
+                    append("access_token", secureStorage.getAccessToken())
+                    append("compact", "true")
+                }
             }
         }
     }

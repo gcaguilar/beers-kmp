@@ -11,6 +11,7 @@ captures
 .externalNativeBuild
 .cxx
 .kotlin
+project.properties
 *.xcodeproj/*
 !*.xcodeproj/project.pbxproj
 !*.xcodeproj/xcshareddata/

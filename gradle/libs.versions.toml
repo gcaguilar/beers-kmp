@@ -23,6 +23,7 @@ detekt = "1.23.6"
 napier = "2.7.1"
 browser = "1.8.0"
 rinku = "0.5.0"
+ksecurestorage = "0.0.3"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -50,9 +51,10 @@ voyager-koin = { module = "cafe.adriel.voyager:voyager-koin", version.ref = "voy
 koin-compose = { module = "io.insert-koin:koin-compose", version.ref = "koin-compose-mp" }
 koin-compose-vm = { module = "io.insert-koin:koin-compose-viewmodel", version.ref = "koin-compose-vm" }
 napier = { module = "io.github.aakira:napier", version.ref = "napier" }
-browser = { module = "androidx.browser:browser", version.ref = "browser"}
-rinku = { module = "dev.theolm:rinku", version.ref = "rinku"}
-rinku-compose = { module = "dev.theolm:rinku-compose-ext", version.ref = "rinku"}
+browser = { module = "androidx.browser:browser", version.ref = "browser" }
+rinku = { module = "dev.theolm:rinku", version.ref = "rinku" }
+rinku-compose = { module = "dev.theolm:rinku-compose-ext", version.ref = "rinku" }
+ksecurestorage = { module = "io.github.alexandereggers:ksecurestorage", version.ref = "ksecurestorage" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

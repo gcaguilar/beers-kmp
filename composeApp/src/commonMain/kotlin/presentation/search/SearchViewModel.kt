@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import domain.Beer
 import domain.BeersWithPagination
 import domain.SearchBeer
+import io.github.aakira.napier.Napier
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -51,7 +52,7 @@ class SearchViewModel(
             viewModelScope.launch {
                 searchBeer(uiState.value.searchText!!).fold(
                     onFailure = {
-                        onFailureSearchResult(Throwable())
+                        onFailureSearchResult(it)
                     },
                     onSuccess = { beerWithPagination ->
                         onSuccessSearchResult(beerWithPagination)
@@ -71,7 +72,7 @@ class SearchViewModel(
         viewModelScope.launch {
             searchBeer(uiState.value.searchText!!, uiState.value.nextPage!!).fold(
                 onFailure = {
-                    onFailureSearchResult(Throwable())
+                    onFailureSearchResult(it)
                 },
                 onSuccess = { beerWithPagination ->
                     onSuccessSearchResult(beerWithPagination)
@@ -109,6 +110,7 @@ class SearchViewModel(
     }
 
     private fun onFailureSearchResult(error: Throwable) {
+        Napier.e("Error while searching $error")
         _uiState.update {
             uiState.value.copy(
                 error = SearchErrorType.Unknown,

@@ -27,9 +27,9 @@ private const val IsLoggedKey = "IsLoggedKey"
 
 @Composable
 fun SplashContent(
-    viewModel: SplashViewModel = koinInject()
+    ScreenModel: SplashScreenModel = koinInject()
 ) {
-    val state = viewModel.state.collectAsState().value
+    val state = ScreenModel.state.collectAsState().value
     val navigator = LocalNavigator.currentOrThrow
 
     Image(
@@ -48,6 +48,6 @@ fun SplashContent(
     }
 
     LaunchedEffect(IsLoggedKey) {
-        viewModel.isLogged()
+        ScreenModel.isLogged()
     }
 }

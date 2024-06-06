@@ -13,6 +13,7 @@ compose-android = "1.6.7"
 junit = "4.13.2"
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 kotlin = "1.9.22"
 ktor = "2.3.10"
 =======
@@ -21,6 +22,9 @@ ktor = "2.3.11"
 kotlin = "1.9.24"
 >>>>>>> c3cf30a (Update ktor to v2.3.11)
 =======
+=======
+ktor = "2.3.12"
+>>>>>>> 25ebaae (Update dependency io.ktor:ktor-client-cio to v2.3.12)
 kotlin = "2.0.0"
 >>>>>>> 0cad37b (Update kotlin monorepo to v2)
 koin = "3.5.6"

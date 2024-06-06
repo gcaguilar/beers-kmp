@@ -3,10 +3,12 @@ package data
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
+@Serializable
 data class BreweryDetailResponse(
     @SerialName("response") val response: BreweryDetailResultResponse
 )
 
+@Serializable
 data class BreweryDetailResultResponse(
     @SerialName("brewery") val brewery: BreweryDetailItemResponse
 )
@@ -28,8 +30,17 @@ data class BreweryDetailItemResponse(
     @SerialName("location") val location: LocationResponse,
     @SerialName("rating") val rating: Rating,
     @SerialName("brewery_description") val breweryDescription: String,
-    @SerialName("stats") val stats: Stats,
+    @SerialName("stats") val stats: BreweryStats,
     @SerialName("owners") val owners: Owners
+)
+
+@Serializable
+data class BreweryStats(
+    @SerialName("total_count") val totalCount: Int,
+    @SerialName("unique_count") val uniqueCount: Int,
+    @SerialName("monthly_count") val monthlyCount: Int,
+    @SerialName("weekly_count") val weeklyCount: Int,
+    @SerialName("age_on_service") val ageOnService: Double
 )
 
 @Serializable

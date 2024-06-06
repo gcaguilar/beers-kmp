@@ -59,7 +59,6 @@ kotlin {
             implementation(libs.voyager.navigator)
             implementation(libs.voyager.koin)
             implementation(libs.koin.compose)
-            implementation(libs.koin.compose.vm)
             api(libs.rinku)
             implementation(libs.rinku.compose)
             implementation(libs.ksecurestorage)

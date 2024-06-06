@@ -56,7 +56,6 @@ data class BreweryResponse(
     @SerialName("location") val location: LocationResponse
 )
 
-
 fun BeerDetailResponse.toBeerDetail(): BeerDetail {
     return BeerDetail(
         bid = response.beer.bid.toString(),
@@ -66,14 +65,20 @@ fun BeerDetailResponse.toBeerDetail(): BeerDetail {
         ibu = response.beer.beerIbu.toString(),
         style = response.beer.beerStyle,
         image = response.beer.beerLabel,
-        rating = response.beer.ratingScore.toString(),
+        rating = response.beer.ratingScore ?: 0.0,
+        numberOfVotes = response.beer.ratingCount ?: 0,
         whisList = response.beer.wishList,
         beerActive = response.beer.beerActive == 1,
-        brewery = response.beer.brewery.toBrewerySummary()
+        brewery = response.beer.brewery.toBrewerySummary(),
     )
 }
 
-private fun BreweryDetailResponse.toBrewery(): Brewery = Brewery(
+private fun BreweryResponse.toBrewerySummary(): BrewerySummary = BrewerySummary(
+    id = breweryId,
+    name = breweryName
+)
+
+fun BreweryDetailResponse.toBrewery(): Brewery = Brewery(
     id = response.brewery.breweryId,
     name = response.brewery.breweryName,
     beerCounts = response.brewery.beerCount,

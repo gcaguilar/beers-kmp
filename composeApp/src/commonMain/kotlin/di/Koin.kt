@@ -14,25 +14,21 @@ import domain.GetBreweryDetail
 import domain.IsLoggedIn
 import domain.SearchBeer
 import domain.SearchRepository
-import io.github.aakira.napier.DebugAntilog
-import io.github.aakira.napier.Napier
 import io.github.alexandereggers.ksecurestorage.KSecureStorage
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.UserAgent
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.client.plugins.logging.LogLevel
-import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
-import org.koin.compose.viewmodel.dsl.viewModelOf
 import org.koin.core.context.startKoin
+import org.koin.core.qualifier.named
 import org.koin.dsl.module
-import presentation.authentication.LoginViewModel
-import presentation.beer.DetailViewModel
-import presentation.brewery.BreweryDetailViewModel
-import presentation.search.SearchViewModel
-import presentation.splash.SplashViewModel
+import presentation.authentication.LoginScreenModel
+import presentation.beer.BeerDetailScreenModel
+import presentation.brewery.BreweryDetailScreenModel
+import presentation.search.SearchScreenModel
+import presentation.splash.SplashScreenModel
 
 fun initKoin() =
     startKoin {
@@ -40,12 +36,11 @@ fun initKoin() =
     }
 
 private val presentationModule = module {
-    viewModelOf(::SearchViewModel)
-    viewModelOf(::DetailViewModel)
-    viewModelOf(::BreweryDetailViewModel)
-    viewModelOf(::LoginViewModel)
-    viewModelOf(::SplashViewModel)
-
+    factory { SearchScreenModel(searchBeer = get()) }
+    factory { BeerDetailScreenModel(getBeerDetail = get()) }
+    factory { BreweryDetailScreenModel(getBreweryDetail = get()) }
+    factory { LoginScreenModel(authenticate = get(), getAuthenticationUrl = get()) }
+    factory { SplashScreenModel(isLoggedIn = get()) }
 }
 
 private val domainModule = module {
@@ -120,10 +115,12 @@ private val dataModule = module {
 }
 
 private val networkModule = module {
+    single(named("UserAgent")) { "BeersKMM D912C0B80A28A04F4EA2FD48E625853326BEAB1C" }
+
     single {
         HttpClient {
             install(UserAgent) {
-                agent = "BeersKMM D912C0B80A28A04F4EA2FD48E625853326BEAB1C"
+                agent = get(named(("UserAgent")))
             }
             install(ContentNegotiation) {
                 json(Json {
@@ -132,14 +129,7 @@ private val networkModule = module {
                     isLenient = true
                 })
             }
-            install(Logging) {
-                logger = object : Logger {
-                    override fun log(message: String) {
-                        Napier.d("HTTP Client", null, message)
-                    }
-                }
-                level = LogLevel.ALL
-            }
-        }.also { Napier.base(DebugAntilog()) }
+            install(Logging)
+        }
     }
 }

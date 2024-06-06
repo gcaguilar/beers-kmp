@@ -8,7 +8,8 @@ data class BeerDetail(
     val ibu: String,
     val style: String,
     val image: String,
-    val rating: String,
+    val rating: Double,
+    val numberOfVotes: Int,
     val whisList: Boolean,
     val beerActive: Boolean,
     val brewery: BrewerySummary

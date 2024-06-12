@@ -1,6 +1,7 @@
 import org.jetbrains.compose.ExperimentalComposeLibrary
-import org.jetbrains.compose.desktop.application.dsl.TargetFormat
-
+import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+        
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidApplication)
@@ -11,9 +12,12 @@ plugins {
 }
 
 kotlin {
-    jvmToolchain(19)
-    androidTarget()
-    jvm("desktop")
+    androidTarget {
+        @OptIn(ExperimentalKotlinGradlePluginApi::class)
+        compilerOptions {
+            jvmTarget.set(JvmTarget.JVM_11)
+        }
+    }
 
     listOf(
         iosX64(),
@@ -28,14 +32,11 @@ kotlin {
     }
 
     sourceSets {
-        val desktopMain by getting
-        val desktopTest by getting
 
         androidMain.dependencies {
             implementation(libs.compose.ui.tooling)
             implementation(libs.androidx.activity.compose)
             implementation(libs.ktor.client.android)
-            implementation(libs.koin.core)
             implementation(libs.koin.android)
             implementation(libs.browser)
         }
@@ -54,7 +55,6 @@ kotlin {
             implementation(libs.ktor.client.content.negotiation)
             implementation(libs.koin.core)
             implementation(libs.kotlinx.coroutines.core)
-            implementation(libs.kotlinx.coroutines.swing)
             implementation(libs.kamel.image)
             implementation(libs.voyager.navigator)
             implementation(libs.voyager.koin)
@@ -63,22 +63,15 @@ kotlin {
             implementation(libs.rinku.compose)
             implementation(libs.ksecurestorage)
         }
-        desktopMain.dependencies {
-            implementation(compose.desktop.currentOs)
-            implementation(libs.ktor.client.cio)
-        }
-
 
         commonTest.dependencies {
-            implementation(libs.kotlin.test)
-            implementation(libs.kotlin.test.junit)
-            implementation(libs.junit)
+            implementation(kotlin("test"))
             @OptIn(ExperimentalComposeLibrary::class)
             implementation(compose.uiTest)
         }
 
-        desktopTest.dependencies {
-            implementation(compose.desktop.currentOs)
+        iosMain.dependencies {
+            implementation(libs.ktor.client.darwin)
         }
     }
 }
@@ -109,27 +102,18 @@ android {
             isMinifyEnabled = false
         }
     }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_19
-        targetCompatibility = JavaVersion.VERSION_19
+    buildFeatures {
+        compose = true
+    }
+    dependencies {
+        debugImplementation(compose.uiTooling)
     }
 }
 
-compose.desktop {
-    application {
-        mainClass = "MainKt"
-
-        nativeDistributions {
-            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "org.gcaguilar.kmmbeers"
-            packageVersion = "1.0.0"
-        }
-    }
-}
 
 tasks.withType<io.gitlab.arturbosch.detekt.Detekt>().configureEach {
-    this.jvmTarget = "19"
+    this.jvmTarget = "11"
 }
 tasks.withType<io.gitlab.arturbosch.detekt.DetektCreateBaselineTask>().configureEach {
-    this.jvmTarget = "19"
+    this.jvmTarget = "11"
 }

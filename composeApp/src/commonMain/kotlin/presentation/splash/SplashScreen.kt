@@ -42,7 +42,7 @@ fun SplashContent(
         val destination = if (isLoggedIn) {
             SearchScreen
         } else {
-            LoginScreen
+           LoginScreen
         }
         navigator.replace(destination)
     }

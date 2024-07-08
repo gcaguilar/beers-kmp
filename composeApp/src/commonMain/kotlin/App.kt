@@ -14,13 +14,22 @@ import cafe.adriel.voyager.navigator.CurrentScreen
 import cafe.adriel.voyager.navigator.Navigator
 import dev.theolm.rinku.DeepLink
 import dev.theolm.rinku.compose.ext.DeepLinkListener
+import di.dataModule
+import di.domainModule
+import di.networkModule
+import di.presentationModule
+import org.koin.compose.KoinApplication
 import presentation.splash.SplashScreen
 
 @Composable
 fun App() {
-    var deepLink by remember { mutableStateOf<DeepLink?>(null) }
-    DeepLinkListener { deepLink = it }
-    MainScreen(deepLink)
+    KoinApplication(application = {
+        modules(networkModule + dataModule + domainModule + presentationModule)
+    }) {
+        var deepLink by remember { mutableStateOf<DeepLink?>(null) }
+        DeepLinkListener { deepLink = it }
+        MainScreen(deepLink)
+    }
 }
 
 @Composable

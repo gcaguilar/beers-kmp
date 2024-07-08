@@ -35,7 +35,7 @@ fun initKoin() =
         modules(networkModule + dataModule + domainModule + presentationModule)
     }
 
-private val presentationModule = module {
+ val presentationModule = module {
     factory { SearchScreenModel(searchBeer = get()) }
     factory { BeerDetailScreenModel(getBeerDetail = get()) }
     factory { BreweryDetailScreenModel(getBreweryDetail = get()) }
@@ -43,7 +43,7 @@ private val presentationModule = module {
     factory { SplashScreenModel(isLoggedIn = get()) }
 }
 
-private val domainModule = module {
+ val domainModule = module {
     factory {
         SearchBeer(
             searchRepository = get()
@@ -77,7 +77,7 @@ private val domainModule = module {
     }
 }
 
-private val dataModule = module {
+ val dataModule = module {
     single { KSecureStorage() }
     factory {
         SecureStorage(
@@ -114,7 +114,7 @@ private val dataModule = module {
     }
 }
 
-private val networkModule = module {
+ val networkModule = module {
     single(named("UserAgent")) { "BeersKMM D912C0B80A28A04F4EA2FD48E625853326BEAB1C" }
 
     single {

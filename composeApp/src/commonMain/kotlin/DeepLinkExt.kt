@@ -2,7 +2,6 @@ import cafe.adriel.voyager.core.screen.Screen
 import dev.theolm.rinku.DeepLink
 import io.github.aakira.napier.Napier
 import presentation.authentication.AuthenticationScreen
-import presentation.authentication.LoginScreen
 import presentation.splash.SplashScreen
 
 

@@ -11,25 +11,14 @@ pluginManagement {
         google()
         gradlePluginPortal()
         mavenCentral()
-        maven("https://maven.pkg.github.com/AlexanderEggers/ksecurestorage")
     }
 }
 
 dependencyResolutionManagement {
-    val prop = Properties().apply {
-        load(FileInputStream(File(rootProject.projectDir, "project.properties")))
-    }
     repositories {
         google()
         mavenCentral()
         maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
-        maven {
-            url = uri("https://maven.pkg.github.com/AlexanderEggers/ksecurestorage")
-            credentials {
-                username = prop.getProperty("username")
-                password = prop.getProperty("token")
-            }
-        }
     }
 }
 

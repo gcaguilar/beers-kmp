@@ -1,11 +1,13 @@
 package presentation.search
 
-import cafe.adriel.voyager.core.model.StateScreenModel
-import cafe.adriel.voyager.core.model.screenModelScope
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import domain.Beer
 import domain.BeersWithPagination
 import domain.SearchBeer
 import io.github.aakira.napier.Napier
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -16,7 +18,10 @@ sealed class SearchErrorType {
 
 class SearchScreenModel(
     private val searchBeer: SearchBeer,
-) : StateScreenModel<SearchScreenModel.UIState>(UIState()) {
+) : ViewModel() {
+    private val _state = MutableStateFlow(UIState())
+    val state: StateFlow<UIState> = _state
+
     data class UIState(
         val searchText: String? = null,
         val isLoading: Boolean = false,
@@ -27,7 +32,7 @@ class SearchScreenModel(
     )
 
     fun onInputTextChange(inputText: String?) {
-        mutableState.update { uiState ->
+        _state.update { uiState ->
             uiState.copy(
                 searchText = inputText
             )
@@ -36,12 +41,12 @@ class SearchScreenModel(
 
     fun searchBeer() {
         state.value.searchText?.let {
-            mutableState.update {
+            _state.update {
                 state.value.copy(
                     error = null, isLoading = true, searchResult = null
                 )
             }
-            screenModelScope.launch {
+            viewModelScope.launch {
                 searchBeer(state.value.searchText!!).fold(onFailure = {
                     onFailureSearchResult(it)
                 }, onSuccess = { beerWithPagination ->
@@ -52,13 +57,13 @@ class SearchScreenModel(
     }
 
     fun requestNextPage() {
-        mutableState.update {
+        _state.update {
             state.value.copy(
                 isLoading = false,
                 isRequestingMoreItems = true,
             )
         }
-        screenModelScope.launch {
+        viewModelScope.launch {
             searchBeer(state.value.searchText!!, state.value.nextPage!!).fold(onFailure = {
                 onFailureSearchResult(it)
             }, onSuccess = { beerWithPagination ->
@@ -68,7 +73,7 @@ class SearchScreenModel(
     }
 
     fun onClearInputText() {
-        mutableState.update {
+        _state.update {
             state.value.copy(
                 searchText = null
             )
@@ -76,7 +81,7 @@ class SearchScreenModel(
     }
 
     fun processError() {
-        mutableState.update {
+        _state.update {
             state.value.copy(
                 error = null
             )
@@ -84,7 +89,7 @@ class SearchScreenModel(
     }
 
     private fun onSuccessSearchResult(beerWithPagination: BeersWithPagination) {
-        mutableState.update {
+        _state.update {
             state.value.copy(
                 isLoading = false,
                 error = null,
@@ -97,7 +102,7 @@ class SearchScreenModel(
 
     private fun onFailureSearchResult(error: Throwable) {
         Napier.e("Error while searching $error")
-        mutableState.update {
+        _state.update {
             state.value.copy(
                 error = SearchErrorType.Unknown, isLoading = false, isRequestingMoreItems = false, searchResult = null
             )

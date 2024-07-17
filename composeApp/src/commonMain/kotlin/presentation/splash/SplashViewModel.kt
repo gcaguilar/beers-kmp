@@ -1,20 +1,24 @@
 package presentation.splash
 
-import cafe.adriel.voyager.core.model.StateScreenModel
+import androidx.lifecycle.ViewModel
 import domain.IsLoggedIn
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 
 
 class SplashScreenModel(
-    private val isLoggedIn: IsLoggedIn
-) : StateScreenModel<SplashScreenModel.SplashState>(SplashState()) {
+    //private val isLoggedIn: IsLoggedIn
+) : ViewModel() {
+    private val _state = MutableStateFlow(SplashState())
+    val state: StateFlow<SplashState> = _state
     data class SplashState(
         val isLoggedIn: Boolean? = null
     )
 
     fun isLogged() {
-        val loggedIn = isLoggedIn()
-        mutableState.update { state ->
+        val loggedIn = false
+        _state.update { state ->
             state.copy(isLoggedIn = loggedIn)
         }
     }

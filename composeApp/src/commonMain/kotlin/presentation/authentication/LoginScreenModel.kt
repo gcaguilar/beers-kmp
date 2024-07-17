@@ -1,74 +1,54 @@
 package presentation.authentication
 
 
-import cafe.adriel.voyager.core.model.StateScreenModel
-import cafe.adriel.voyager.core.model.screenModelScope
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import domain.Authenticate
-import domain.GetAuthenticationUrl
-import io.github.aakira.napier.Napier
+import domain.IsLoggedIn
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 sealed class AuthenticationEvents {
-    data class MakeLogin(val loginUrl: String) : AuthenticationEvents()
+    data object MakeLogin : AuthenticationEvents()
     data object LoggedIn : AuthenticationEvents()
 }
 
 class LoginScreenModel(
-    private val getAuthenticationUrl: GetAuthenticationUrl,
+    private val isLoggedIn: IsLoggedIn,
     private val authenticate: Authenticate
-) : StateScreenModel<LoginScreenModel.AuthenticationUIState>(AuthenticationUIState()) {
+) : ViewModel() {
+    private val _state = MutableStateFlow(AuthenticationUIState())
+    val state: StateFlow<AuthenticationUIState> = _state
+
     data class AuthenticationUIState(
         val events: AuthenticationEvents? = null,
         val isLoading: Boolean = true
     )
 
-    fun getLogin() {
-        mutableState.update { uiState ->
+    fun checkStatus() {
+        _state.update { uiState ->
             uiState.copy(
                 isLoading = true,
-            )
+                )
         }
-        screenModelScope.launch {
-            getAuthenticationUrl()
-                .fold({ url ->
-                    mutableState.update { uiState ->
-                        uiState.copy(
-                            events = AuthenticationEvents.MakeLogin(url),
-                            isLoading = false
-                        )
-                    }
-                }, {
+        viewModelScope.launch {
+            if (!isLoggedIn()) {
+                authenticate()
+            }
 
-                })
+            _state.update {
+                it.copy(
+                    events = AuthenticationEvents.LoggedIn
+                )
+            }
         }
     }
 
-    fun receivedCode(intentCode: String) {
-        mutableState.update { uiState ->
-            uiState.copy(
-                isLoading = true,
-            )
-        }
-        screenModelScope.launch {
-            authenticate(intentCode).fold(
-                onSuccess = {
-                    mutableState.update {
-                        it.copy(
-                            events = AuthenticationEvents.LoggedIn,
-                            isLoading = false,
-                        )
-                    }
-                },
-                onFailure = {
-                   Napier.e("Authentication failed")
-                }
-            )
-        }
-    }
 
     fun processNavigation() {
-        mutableState.update {
+        _state.update {
             it.copy(
                 events = null
             )

@@ -1,7 +1,7 @@
 import org.jetbrains.compose.ExperimentalComposeLibrary
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-        
+
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidApplication)
@@ -12,10 +12,11 @@ plugins {
 }
 
 kotlin {
+    jvmToolchain(17)
     androidTarget {
         @OptIn(ExperimentalKotlinGradlePluginApi::class)
         compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_11)
+            jvmTarget.set(JvmTarget.JVM_17)
         }
     }
 
@@ -38,7 +39,6 @@ kotlin {
             implementation(libs.androidx.activity.compose)
             implementation(libs.ktor.client.android)
             implementation(libs.koin.android)
-            implementation(libs.browser)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -47,21 +47,23 @@ kotlin {
             implementation(compose.ui)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
+            implementation(libs.lifecycle.viewmodel)
             implementation(libs.ktor.client.core)
             implementation(libs.ktor.client.mock)
             implementation(libs.ktor.client.loggin)
             implementation(libs.napier)
             implementation(libs.ktor.serialization.kotlinx.json)
             implementation(libs.ktor.client.content.negotiation)
-            implementation(libs.koin.core)
+            implementation(libs.bundles.koin)
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.kamel.image)
             implementation(libs.voyager.navigator)
             implementation(libs.voyager.koin)
+            implementation(libs.voyager.lifecycle)
             implementation(libs.koin.compose)
             api(libs.rinku)
             implementation(libs.rinku.compose)
-            implementation(libs.ksecurestorage)
+            implementation(libs.oidc.appsupport)
         }
 
         commonTest.dependencies {
@@ -72,6 +74,7 @@ kotlin {
 
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
+            implementation(libs.koin.core)
         }
     }
 }
@@ -90,6 +93,9 @@ android {
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 1
         versionName = "1.0"
+        addManifestPlaceholders(
+            mapOf("oidcRedirectScheme" to "org.gcaguilar.kmmbeers")
+        )
     }
     packaging {
         resources {
@@ -112,8 +118,8 @@ android {
 
 
 tasks.withType<io.gitlab.arturbosch.detekt.Detekt>().configureEach {
-    this.jvmTarget = "11"
+    this.jvmTarget = "17"
 }
 tasks.withType<io.gitlab.arturbosch.detekt.DetektCreateBaselineTask>().configureEach {
-    this.jvmTarget = "11"
+    this.jvmTarget = "17"
 }

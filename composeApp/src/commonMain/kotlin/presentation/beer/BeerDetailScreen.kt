@@ -99,10 +99,7 @@ private fun RatingSection(): @Composable (ColumnScope.() -> Unit) = {
         text = "Ratings & Reviews",
         style = MaterialTheme.typography.headlineSmall,
     )
-    Rating(
-        rate = "4.5",
-        totalReviews = "1000"
-    )
+    Rating()
 }
 
 @Composable

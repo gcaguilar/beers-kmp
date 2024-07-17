@@ -19,13 +19,16 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.annotation.KoinExperimentalAPI
 import presentation.beer.DetailScreen
 import presentation.ui.Search
 
 object SearchScreen : Screen {
+    @OptIn(KoinExperimentalAPI::class)
     @Composable
     override fun Content() {
-        val screenModel = koinScreenModel<SearchScreenModel>()
+        val screenModel = koinViewModel<SearchScreenModel>()
         val state by screenModel.state.collectAsState()
         val navigator = LocalNavigator.currentOrThrow
         val listState = rememberLazyStaggeredGridState()

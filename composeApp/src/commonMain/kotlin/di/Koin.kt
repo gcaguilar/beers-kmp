@@ -1,49 +1,39 @@
 package di
 
-
-import data.AuthenticationRepositoryImpl
-import data.AuthenticationService
-import data.SearchRepositoryImpl
-import data.SecureStorage
-import data.UntappdService
-import domain.Authenticate
-import domain.AuthenticationRepository
-import domain.GetAuthenticationUrl
-import domain.GetBeerDetail
-import domain.GetBreweryDetail
-import domain.IsLoggedIn
-import domain.SearchBeer
-import domain.SearchRepository
-import io.github.alexandereggers.ksecurestorage.KSecureStorage
-import io.ktor.client.HttpClient
-import io.ktor.client.plugins.UserAgent
-import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.client.plugins.logging.Logging
-import io.ktor.serialization.kotlinx.json.json
+import data.*
+import domain.*
+import io.ktor.client.*
+import io.ktor.client.plugins.*
+import io.ktor.client.plugins.contentnegotiation.*
+import io.ktor.client.plugins.logging.*
+import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.json.Json
 import org.koin.core.context.startKoin
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
+import org.publicvalue.multiplatform.oidc.OpenIdConnectClient
+import org.publicvalue.multiplatform.oidc.types.CodeChallengeMethod
 import presentation.authentication.LoginScreenModel
 import presentation.beer.BeerDetailScreenModel
 import presentation.brewery.BreweryDetailScreenModel
 import presentation.search.SearchScreenModel
 import presentation.splash.SplashScreenModel
+import org.koin.compose.viewmodel.dsl.viewModel
+import org.koin.compose.viewmodel.dsl.viewModelOf
+import org.publicvalue.multiplatform.oidc.ExperimentalOpenIdConnect
+import org.publicvalue.multiplatform.oidc.tokenstore.SettingsStore
+import org.publicvalue.multiplatform.oidc.tokenstore.SettingsTokenStore
+import org.publicvalue.multiplatform.oidc.tokenstore.TokenStore
 
-fun initKoin() =
-    startKoin {
-        modules(networkModule + dataModule + domainModule + presentationModule)
-    }
-
- val presentationModule = module {
-    factory { SearchScreenModel(searchBeer = get()) }
+val presentationModule = module {
+    viewModelOf(::SearchScreenModel)
     factory { BeerDetailScreenModel(getBeerDetail = get()) }
     factory { BreweryDetailScreenModel(getBreweryDetail = get()) }
-    factory { LoginScreenModel(authenticate = get(), getAuthenticationUrl = get()) }
-    factory { SplashScreenModel(isLoggedIn = get()) }
+    viewModelOf(::LoginScreenModel)
+    viewModelOf(::SplashScreenModel)
 }
 
- val domainModule = module {
+val domainModule = module {
     factory {
         SearchBeer(
             searchRepository = get()
@@ -61,7 +51,7 @@ fun initKoin() =
         )
     }
     factory {
-        GetAuthenticationUrl(
+        IsLoggedIn(
             authenticationRepository = get()
         )
     }
@@ -70,51 +60,53 @@ fun initKoin() =
             authenticationRepository = get()
         )
     }
-    factory {
-        IsLoggedIn(
-            authenticationRepository = get()
-        )
-    }
 }
 
- val dataModule = module {
-    single { KSecureStorage() }
-    factory {
-        SecureStorage(
-            kSecureStorage = get()
-        )
+@OptIn(ExperimentalOpenIdConnect::class)
+val dataModule = module {
+    single{
+        OpenIdConnectClient {
+            endpoints {
+                tokenEndpoint = "https://untappd.com/oauth/authorize/"
+                authorizationEndpoint = "https://untappd.com/oauth/authenticate/"
+                userInfoEndpoint = null
+                endSessionEndpoint = "<endSessionEndpoint>"
+            }
+
+            clientId = ""
+            clientSecret = ""
+            scope = null
+            codeChallengeMethod = CodeChallengeMethod.off
+            redirectUri = "org.gcaguilar.kmmbeers://auth"
+        }
     }
+
     factory<SearchRepository> {
         SearchRepositoryImpl(
             service = get()
         )
     }
-    factory<AuthenticationRepository> {
-        AuthenticationRepositoryImpl(
-            authenticationService = get(),
-            secureStorage = get()
-        )
+    factory<AuthenticatorService>{
+        AuthenticationServiceImpl(
+            client = get(),
+            codeAuthFlowFactory = get()
+       )
     }
     factory<AuthenticationRepository> {
         AuthenticationRepositoryImpl(
-            authenticationService = get(),
-            secureStorage = get()
+            authenticatorService = get(),
+            tokenStore = get()
         )
     }
     single {
         UntappdService(
             ktorClient = get(),
-            secureStorage = get()
-        )
-    }
-    single {
-        AuthenticationService(
-            ktorClient = get()
+            tokenStore = get()
         )
     }
 }
 
- val networkModule = module {
+val networkModule = module {
     single(named("UserAgent")) { "BeersKMM D912C0B80A28A04F4EA2FD48E625853326BEAB1C" }
 
     single {
@@ -133,3 +125,4 @@ fun initKoin() =
         }
     }
 }
+

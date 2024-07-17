@@ -1,23 +1,25 @@
 package data
 
 import domain.AuthenticationRepository
+import org.publicvalue.multiplatform.oidc.ExperimentalOpenIdConnect
+import org.publicvalue.multiplatform.oidc.OpenIdConnectClient
+import org.publicvalue.multiplatform.oidc.appsupport.CodeAuthFlowFactory
+import org.publicvalue.multiplatform.oidc.tokenstore.TokenStore
 
-class AuthenticationRepositoryImpl(
-    private val authenticationService: AuthenticationService,
-    private val secureStorage: SecureStorage
+class AuthenticationRepositoryImpl @OptIn(ExperimentalOpenIdConnect::class) constructor(
+    private val authenticatorService: AuthenticatorService,
+    private val tokenStore: TokenStore
 ) : AuthenticationRepository {
-    override suspend fun getLoginUrl(): Result<String> {
-        return authenticationService.getAuthenticationUrl().mapCatching {
-            it.loginUrl
-        }
+    @OptIn(ExperimentalOpenIdConnect::class)
+    override suspend fun authenticate() {
+      authenticatorService.authenticate()
+          .onSuccess {
+              tokenStore.saveTokens(accessToken = it, refreshToken = null, idToken = null)
+          }
     }
 
-    override suspend fun authenticate(code: String): Result<Unit> {
-        return authenticationService.authorize(AuthenticationCode(code))
-            .mapCatching { secureStorage.setAccessToken(it.access_token) }
-    }
-
-    override fun isLoggedIn(): Boolean {
-        return secureStorage.isLoggedIn()
+    @OptIn(ExperimentalOpenIdConnect::class)
+    override suspend fun isLoggedIn(): Boolean {
+        return tokenStore.getAccessToken() != null
     }
 }

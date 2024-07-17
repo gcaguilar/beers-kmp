@@ -9,34 +9,32 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import cafe.adriel.voyager.core.annotation.ExperimentalVoyagerApi
 import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.jetpack.ProvideNavigatorLifecycleKMPSupport
 import cafe.adriel.voyager.navigator.CurrentScreen
 import cafe.adriel.voyager.navigator.Navigator
 import dev.theolm.rinku.DeepLink
 import dev.theolm.rinku.compose.ext.DeepLinkListener
-import di.dataModule
-import di.domainModule
-import di.networkModule
-import di.presentationModule
+import di.*
 import org.koin.compose.KoinApplication
 import presentation.splash.SplashScreen
 
+@OptIn(ExperimentalVoyagerApi::class)
 @Composable
 fun App() {
-    KoinApplication(application = {
-        modules(networkModule + dataModule + domainModule + presentationModule)
-    }) {
-        var deepLink by remember { mutableStateOf<DeepLink?>(null) }
-        DeepLinkListener { deepLink = it }
+    var deepLink by remember { mutableStateOf<DeepLink?>(null) }
+    DeepLinkListener { deepLink = it }
+    ProvideNavigatorLifecycleKMPSupport {
         MainScreen(deepLink)
     }
 }
 
 @Composable
 fun MainScreen(deepLink: DeepLink?) {
-    val screenStack: List<Screen> = remember(deepLink) {
-        deepLink.toScreenStack()
-    }
+//    val screenStack: List<Screen> = remember(deepLink) {
+//        deepLink.toScreenStack()
+//    }
 
     MaterialTheme {
         Scaffold(
@@ -54,9 +52,9 @@ fun MainScreen(deepLink: DeepLink?) {
                 Navigator(screen = SplashScreen) { navigator ->
                     Box(Modifier.padding(paddingValues)) {
                         CurrentScreen()
-                        remember(screenStack) {
-                            navigator.replaceAll(screenStack)
-                        }
+//                        remember(screenStack) {
+//                            navigator.replaceAll(screenStack)
+//                        }
                     }
                 }
             }

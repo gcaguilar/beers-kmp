@@ -1,7 +1,3 @@
-import org.gradle.initialization.Environment
-import java.io.FileInputStream
-import java.util.Properties
-
 rootProject.name = "KmmBeers"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 

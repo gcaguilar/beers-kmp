@@ -24,6 +24,9 @@ napier = "2.7.1"
 rinku = "0.5.1"
 oidc = "0.10.0"
 lifecycle = "2.8.0"
+firebaseBom = "33.1.2"
+firebase = "1.13.0"
+googleServices = "4.4.1"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -56,12 +59,23 @@ napier = { module = "io.github.aakira:napier", version.ref = "napier" }
 rinku = { module = "dev.theolm:rinku", version.ref = "rinku" }
 rinku-compose = { module = "dev.theolm:rinku-compose-ext", version.ref = "rinku" }
 oidc-appsupport = { module = "io.github.kalinjul.kotlin.multiplatform:oidc-appsupport", version.ref = "oidc" }
+firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
+firebase-ktx = { group = "com.google.firebase", name = "firebase-common-ktx" }
+firebase-auth-ktx = { group = "com.google.firebase", name = "firebase-auth-ktx" }
+firebase-firestone = { module = "dev.gitlive:firebase-firestore", version.ref = "firebase" }
+firebase-auth = { module = "dev.gitlive:firebase-auth", version.ref = "firebase" }
+firebase-common = { module = "dev.gitlive:firebase-common", version.ref = "firebase" }
 
 [bundles]
 koin = [
     "koin-core",
     "koin-compose",
     "koin-compose-viewmodel"
+]
+firebase = [
+    "firebase-firestone",
+    "firebase-common",
+    "firebase-auth"
 ]
 
 [plugins]
@@ -72,4 +86,4 @@ jetbrainsCompose = { id = "org.jetbrains.compose", version.ref = "compose" }
 kotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
-
+gms = { id = "com.google.gms.google-services", version.ref = "googleServices" }

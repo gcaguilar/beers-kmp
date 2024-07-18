@@ -11,10 +11,10 @@ captures
 .externalNativeBuild
 .cxx
 .kotlin
-project.properties
 *.xcodeproj/*
 !*.xcodeproj/project.pbxproj
 !*.xcodeproj/xcshareddata/
 !*.xcodeproj/project.xcworkspace/
 !*.xcworkspace/contents.xcworkspacedata
 **/xcshareddata/WorkspaceSettings.xcsettings
+composeApp/src/google-services.json

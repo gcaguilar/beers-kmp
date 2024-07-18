@@ -1,6 +1,8 @@
 import org.jetbrains.compose.ExperimentalComposeLibrary
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import java.io.FileInputStream
+import java.util.*
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -28,7 +30,6 @@ kotlin {
         iosTarget.binaries.framework {
             baseName = "ComposeApp"
             isStatic = true
-            export(libs.rinku)
         }
     }
 
@@ -39,6 +40,8 @@ kotlin {
             implementation(libs.androidx.activity.compose)
             implementation(libs.ktor.client.android)
             implementation(libs.koin.android)
+            implementation(libs.firebase.ktx)
+            implementation(libs.firebase.auth.ktx)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -61,9 +64,9 @@ kotlin {
             implementation(libs.voyager.koin)
             implementation(libs.voyager.lifecycle)
             implementation(libs.koin.compose)
-            api(libs.rinku)
-            implementation(libs.rinku.compose)
             implementation(libs.oidc.appsupport)
+            implementation(project.dependencies.platform(libs.firebase.bom))
+            implementation(libs.bundles.firebase)
         }
 
         commonTest.dependencies {
@@ -115,7 +118,6 @@ android {
         debugImplementation(compose.uiTooling)
     }
 }
-
 
 tasks.withType<io.gitlab.arturbosch.detekt.Detekt>().configureEach {
     this.jvmTarget = "17"

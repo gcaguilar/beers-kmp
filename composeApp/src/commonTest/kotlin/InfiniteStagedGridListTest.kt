@@ -8,9 +8,9 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performScrollToIndex
 import androidx.compose.ui.test.runComposeUiTest
 import androidx.compose.ui.unit.dp
-import presentation.search.InfiniteStagedGridList
-import presentation.search.InfiniteStagedGridListTag
-import presentation.search.isScrollingUp
+import org.gcaguilar.kmmbeers.presentation.search.InfiniteStagedGridList
+import org.gcaguilar.kmmbeers.presentation.search.InfiniteStagedGridListTag
+import org.gcaguilar.kmmbeers.presentation.search.isScrollingUp
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue

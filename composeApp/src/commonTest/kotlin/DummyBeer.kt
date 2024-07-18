@@ -1,6 +1,6 @@
-import domain.Beer
-import domain.BeersWithPagination
-import domain.BrewerySummary
+import org.gcaguilar.kmmbeers.domain.Beer
+import org.gcaguilar.kmmbeers.domain.BeersWithPagination
+import org.gcaguilar.kmmbeers.domain.BrewerySummary
 
 object DummyBrewery {
     val brewery = BrewerySummary(1, "Brewery 1")

@@ -25,7 +25,7 @@ rinku = "0.5.1"
 oidc = "0.10.1"
 lifecycle = "2.8.0"
 firebaseBom = "33.2.0"
-firebase = "1.13.0"
+firebase = "2.0.0"
 googleServices = "4.4.2"
 
 [libraries]

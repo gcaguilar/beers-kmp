@@ -18,3 +18,4 @@ captures
 !*.xcworkspace/contents.xcworkspacedata
 **/xcshareddata/WorkspaceSettings.xcsettings
 composeApp/src/google-services.json
+Package.resolved

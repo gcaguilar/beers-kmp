@@ -8,22 +8,22 @@ import io.ktor.client.plugins.logging.*
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.json.Json
 import org.gcaguilar.kmmbeers.data.*
-import org.koin.compose.viewmodel.dsl.viewModelOf
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import org.publicvalue.multiplatform.oidc.ExperimentalOpenIdConnect
 import org.publicvalue.multiplatform.oidc.OpenIdConnectClient
 import org.publicvalue.multiplatform.oidc.types.CodeChallengeMethod
 import org.gcaguilar.kmmbeers.presentation.authentication.LoginScreenModel
-import org.gcaguilar.kmmbeers.presentation.beer.BeerDetailScreenModel
-import org.gcaguilar.kmmbeers.presentation.brewery.BreweryDetailScreenModel
 import org.gcaguilar.kmmbeers.presentation.search.SearchScreenModel
 import org.gcaguilar.kmmbeers.presentation.splash.SplashScreenModel
+import org.gcaguilar.kmmbeers.presentation.beer.BeerDetailViewModel
+import org.gcaguilar.kmmbeers.presentation.brewery.BreweryDetailViewModel
+import org.koin.compose.viewmodel.dsl.viewModelOf
 
 val presentationModule = module {
     viewModelOf(::SearchScreenModel)
-    factory { BeerDetailScreenModel(getBeerDetail = get()) }
-    factory { BreweryDetailScreenModel(getBreweryDetail = get()) }
+    viewModelOf(::BeerDetailViewModel)
+    viewModelOf(::BreweryDetailViewModel)
     viewModelOf(::LoginScreenModel)
     viewModelOf(::SplashScreenModel)
 }

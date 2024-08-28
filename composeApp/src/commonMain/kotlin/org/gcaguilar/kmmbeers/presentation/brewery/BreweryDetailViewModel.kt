@@ -1,15 +1,20 @@
 package org.gcaguilar.kmmbeers.presentation.brewery
 
-import cafe.adriel.voyager.core.model.StateScreenModel
-import cafe.adriel.voyager.core.model.screenModelScope
-import org.gcaguilar.kmmbeers.domain.Brewery
-import org.gcaguilar.kmmbeers.domain.GetBreweryDetail
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.gcaguilar.kmmbeers.domain.Brewery
+import org.gcaguilar.kmmbeers.domain.GetBreweryDetail
 
-class BreweryDetailScreenModel(
+class BreweryDetailViewModel(
     private val getBreweryDetail: GetBreweryDetail
-) : StateScreenModel<BreweryDetailScreenModel.UIState>(UIState.Loading) {
+) : ViewModel() {
+    private val _state: MutableStateFlow<UIState> = MutableStateFlow(UIState.Loading)
+    val state: StateFlow<UIState> = _state
+
     sealed class UIState {
         data object Loading : UIState()
         data object Error : UIState()
@@ -17,15 +22,15 @@ class BreweryDetailScreenModel(
     }
 
     suspend fun fetchBreweryDetail(id: String) {
-        screenModelScope.launch {
+        viewModelScope.launch {
             getBreweryDetail(id).fold(
                 onSuccess = { brewery ->
-                    mutableState.update {
+                    _state.update {
                         UIState.Success(brewery)
                     }
                 },
                 onFailure = {
-                    mutableState.update {
+                    _state.update {
                         UIState.Error
                     }
                 }

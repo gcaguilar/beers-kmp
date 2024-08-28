@@ -18,12 +18,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
-import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import org.gcaguilar.kmmbeers.domain.Beer
 import org.gcaguilar.kmmbeers.presentation.ui.BeerItem
 import org.gcaguilar.kmmbeers.presentation.ui.InfoSection
+import org.koin.compose.viewmodel.koinViewModel
 
 private const val FetchBreweryKey = "FetchBrewery"
 
@@ -31,8 +31,8 @@ data class BreweryDetail(val id: String) : Screen {
 
     @Composable
     override fun Content() {
-        val screenModel = koinScreenModel<BreweryDetailScreenModel>()
-        val state by screenModel.state.collectAsState()
+        val viewModel = koinViewModel<BreweryDetailViewModel>()
+        val state by viewModel.state.collectAsState()
         val navigator = LocalNavigator.currentOrThrow
 
         Column(
@@ -40,14 +40,15 @@ data class BreweryDetail(val id: String) : Screen {
             horizontalAlignment = Alignment.Start,
         ) {
             when (state) {
-                BreweryDetailScreenModel.UIState.Error -> Text("Error")
-                BreweryDetailScreenModel.UIState.Loading -> CircularProgressIndicator()
-                is BreweryDetailScreenModel.UIState.Success -> BreweryDetail(
+                BreweryDetailViewModel.UIState.Error -> Text("Error")
+                BreweryDetailViewModel.UIState.Loading -> CircularProgressIndicator()
+                is BreweryDetailViewModel.UIState.Success -> BreweryDetail(
                     infoSection = {
                         InfoSection(
-                            imageUrl = (state as BreweryDetailScreenModel.UIState.Success).breweryDetail.imageUrl,
-                            name = (state as BreweryDetailScreenModel.UIState.Success).breweryDetail.name,
-                            description = (state as BreweryDetailScreenModel.UIState.Success).breweryDetail.description ?: "",
+                            imageUrl = (state as BreweryDetailViewModel.UIState.Success).breweryDetail.imageUrl,
+                            name = (state as BreweryDetailViewModel.UIState.Success).breweryDetail.name,
+                            description = (state as BreweryDetailViewModel.UIState.Success).breweryDetail.description
+                                ?: "",
                         )
                     },
                     locationSection = {},
@@ -58,7 +59,7 @@ data class BreweryDetail(val id: String) : Screen {
         }
 
         LaunchedEffect(key1 = FetchBreweryKey) {
-            screenModel.fetchBreweryDetail(id)
+            viewModel.fetchBreweryDetail(id)
         }
     }
 }

@@ -20,44 +20,43 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
-import cafe.adriel.voyager.koin.koinScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
-import org.gcaguilar.kmmbeers.presentation.beer.BeerDetailScreenModel.UIState
 import org.gcaguilar.kmmbeers.presentation.brewery.BreweryDetail
 import org.gcaguilar.kmmbeers.presentation.ui.HeadingTextBlock
 import org.gcaguilar.kmmbeers.presentation.ui.InfoSection
 import org.gcaguilar.kmmbeers.presentation.ui.Rating
+import org.koin.compose.viewmodel.koinViewModel
 
 private const val FetchBeerKey = "Beer"
 
 data class DetailScreen(val bid: String) : Screen {
     @Composable
     override fun Content() {
-        val screenModel = koinScreenModel<BeerDetailScreenModel>()
-        val state by screenModel.state.collectAsState()
+        val viewModel = koinViewModel<BeerDetailViewModel>()
+        val state by viewModel.state.collectAsState()
         val navigator = LocalNavigator.currentOrThrow
 
         when (state) {
-            UIState.Error -> Text("Error")
-            UIState.Loading -> CircularProgressIndicator()
-            is UIState.Success -> Detail(
+            BeerDetailViewModel.UIState.Error -> Text("Error")
+            BeerDetailViewModel.UIState.Loading -> CircularProgressIndicator()
+            is BeerDetailViewModel.UIState.Success -> Detail(
                 descriptionSection = {
                     InfoSection(
-                        imageUrl = (state as UIState.Success).beerDetail.image,
-                        name = (state as UIState.Success).beerDetail.name,
-                        description = (state as UIState.Success).beerDetail.description
+                        imageUrl = (state as BeerDetailViewModel.UIState.Success).beerDetail.image,
+                        name = (state as BeerDetailViewModel.UIState.Success).beerDetail.name,
+                        description = (state as BeerDetailViewModel.UIState.Success).beerDetail.description
                     )
                 },
                 propertiesSection = PropertiesSection(
-                    ibu = (state as UIState.Success).beerDetail.ibu,
-                    abv = (state as UIState.Success).beerDetail.abv,
-                    style = (state as UIState.Success).beerDetail.style
+                    ibu = (state as BeerDetailViewModel.UIState.Success).beerDetail.ibu,
+                    abv = (state as BeerDetailViewModel.UIState.Success).beerDetail.abv,
+                    style = (state as BeerDetailViewModel.UIState.Success).beerDetail.style
                 ),
                 brewerSection = BrewerSection(
-                    brewerName = (state as UIState.Success).beerDetail.brewery.name,
+                    brewerName = (state as BeerDetailViewModel.UIState.Success).beerDetail.brewery.name,
                     onClick = {
-                        navigator.push(BreweryDetail(id = (state as UIState.Success).beerDetail.brewery.id.toString()))
+                        navigator.push(BreweryDetail(id = (state as BeerDetailViewModel.UIState.Success).beerDetail.brewery.id.toString()))
                     }
                 ),
                 ratingSection = RatingSection()
@@ -65,7 +64,7 @@ data class DetailScreen(val bid: String) : Screen {
         }
 
         LaunchedEffect(key1 = FetchBeerKey) {
-            screenModel.getBeer(bid)
+            viewModel.getBeer(bid)
         }
     }
 

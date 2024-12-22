@@ -1,40 +1,29 @@
 [versions]
 agp = "8.5.2"
-android-compileSdk = "34"
-android-minSdk = "24"
-android-targetSdk = "34"
+android-compileSdk = "35"
+android-minSdk = "26"
+android-targetSdk = "35"
 androidx-activityCompose = "1.9.2"
-androidx-appcompat = "1.6.1"
-androidx-core-ktx = "1.13.1"
-androidx-espresso-core = "3.5.1"
-androidx-test-junit = "1.1.5"
-compose = "1.7.0-beta01"
-compose-android = "1.7.0"
+compose = "1.7.3"
 junit = "4.13.2"
-ktor = "2.3.12"
-kotlin = "2.0.20"
-koin = "4.0.0-RC2"
-koin-compose = "4.0.0-RC2"
+ktor = "3.0.3"
+kotlin = "2.1.0"
+koin = "4.0.0"
+koin-compose = "4.0.0"
 logger = "1.5.6"
 coroutines = "1.8.1"
 kamel = "0.9.5"
-voyager = "1.1.0-beta02"
 detekt = "1.23.6"
 napier = "2.7.1"
-rinku = "0.5.1"
-oidc = "0.10.1"
+oidc = "0.12.1"
 lifecycle = "2.8.1"
 firebaseBom = "33.2.0"
 firebase = "2.1.0"
 googleServices = "4.4.2"
+kmpauth = "2.3.0-beta01"
 
 [libraries]
-kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
-kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
-junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activityCompose" }
-compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "compose-android" }
-compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "compose-android" }
 lifecycle-viewmodel = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycle" }
 koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
 koin-compose = { module = "io.insert-koin:koin-compose", version.ref = "koin-compose" }
@@ -52,19 +41,15 @@ kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutine
 ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
 ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
 kamel-image = { module = "media.kamel:kamel-image", version.ref = "kamel" }
-voyager-navigator = { module = "cafe.adriel.voyager:voyager-navigator", version.ref = "voyager" }
-voyager-koin = { module = "cafe.adriel.voyager:voyager-koin", version.ref = "voyager" }
-voyager-lifecycle = { module = "cafe.adriel.voyager:voyager-lifecycle-kmp", version.ref = "voyager" }
 napier = { module = "io.github.aakira:napier", version.ref = "napier" }
-rinku = { module = "dev.theolm:rinku", version.ref = "rinku" }
-rinku-compose = { module = "dev.theolm:rinku-compose-ext", version.ref = "rinku" }
 oidc-appsupport = { module = "io.github.kalinjul.kotlin.multiplatform:oidc-appsupport", version.ref = "oidc" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
-firebase-ktx = { group = "com.google.firebase", name = "firebase-common-ktx" }
-firebase-auth-ktx = { group = "com.google.firebase", name = "firebase-auth-ktx" }
 firebase-firestone = { module = "dev.gitlive:firebase-firestore", version.ref = "firebase" }
 firebase-auth = { module = "dev.gitlive:firebase-auth", version.ref = "firebase" }
 firebase-common = { module = "dev.gitlive:firebase-common", version.ref = "firebase" }
+kmp-auth = { module = "io.github.mirzemehdi:kmpauth-google", version.ref = "kmpauth" }
+kmp-firebase = { module = "io.github.mirzemehdi:kmpauth-firebase", version.ref = "kmpauth" }
+kmp-uihelper = { module = "io.github.mirzemehdi:kmpauth-uihelper", version.ref = "kmpauth" }
 
 [bundles]
 koin = [
@@ -76,6 +61,12 @@ firebase = [
     "firebase-firestone",
     "firebase-common",
     "firebase-auth"
+]
+
+kmp = [
+    "kmp-auth",
+    "kmp-firebase",
+    "kmp-uihelper"
 ]
 
 [plugins]

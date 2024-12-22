@@ -19,9 +19,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import cafe.adriel.voyager.core.screen.Screen
-import cafe.adriel.voyager.navigator.LocalNavigator
-import cafe.adriel.voyager.navigator.currentOrThrow
 import org.gcaguilar.kmmbeers.presentation.brewery.BreweryDetail
 import org.gcaguilar.kmmbeers.presentation.ui.HeadingTextBlock
 import org.gcaguilar.kmmbeers.presentation.ui.InfoSection
@@ -30,64 +27,63 @@ import org.koin.compose.viewmodel.koinViewModel
 
 private const val FetchBeerKey = "Beer"
 
-data class DetailScreen(val bid: String) : Screen {
-    @Composable
-    override fun Content() {
-        val viewModel = koinViewModel<BeerDetailViewModel>()
-        val state by viewModel.state.collectAsState()
-        val navigator = LocalNavigator.currentOrThrow
+@Composable
+fun DetailScreen(
+    bid: String
+) {
+    val viewModel = koinViewModel<BeerDetailViewModel>()
+    val state by viewModel.state.collectAsState()
 
-        when (state) {
-            BeerDetailViewModel.UIState.Error -> Text("Error")
-            BeerDetailViewModel.UIState.Loading -> CircularProgressIndicator()
-            is BeerDetailViewModel.UIState.Success -> Detail(
-                descriptionSection = {
-                    InfoSection(
-                        imageUrl = (state as BeerDetailViewModel.UIState.Success).beerDetail.image,
-                        name = (state as BeerDetailViewModel.UIState.Success).beerDetail.name,
-                        description = (state as BeerDetailViewModel.UIState.Success).beerDetail.description
-                    )
-                },
-                propertiesSection = PropertiesSection(
-                    ibu = (state as BeerDetailViewModel.UIState.Success).beerDetail.ibu,
-                    abv = (state as BeerDetailViewModel.UIState.Success).beerDetail.abv,
-                    style = (state as BeerDetailViewModel.UIState.Success).beerDetail.style
-                ),
-                brewerSection = BrewerSection(
-                    brewerName = (state as BeerDetailViewModel.UIState.Success).beerDetail.brewery.name,
-                    onClick = {
-                        navigator.push(BreweryDetail(id = (state as BeerDetailViewModel.UIState.Success).beerDetail.brewery.id.toString()))
-                    }
-                ),
-                ratingSection = RatingSection()
-            )
-        }
-
-        LaunchedEffect(key1 = FetchBeerKey) {
-            viewModel.getBeer(bid)
-        }
+    when (state) {
+        BeerDetailViewModel.UIState.Error -> Text("Error")
+        BeerDetailViewModel.UIState.Loading -> CircularProgressIndicator()
+        is BeerDetailViewModel.UIState.Success -> Detail(
+            descriptionSection = {
+                InfoSection(
+                    imageUrl = (state as BeerDetailViewModel.UIState.Success).beerDetail.image,
+                    name = (state as BeerDetailViewModel.UIState.Success).beerDetail.name,
+                    description = (state as BeerDetailViewModel.UIState.Success).beerDetail.description
+                )
+            },
+            propertiesSection = PropertiesSection(
+                ibu = (state as BeerDetailViewModel.UIState.Success).beerDetail.ibu,
+                abv = (state as BeerDetailViewModel.UIState.Success).beerDetail.abv,
+                style = (state as BeerDetailViewModel.UIState.Success).beerDetail.style
+            ),
+            brewerSection = BrewerSection(
+                brewerName = (state as BeerDetailViewModel.UIState.Success).beerDetail.brewery.name,
+                onClick = {
+                    // navigator.push(BreweryDetail(id = (state as BeerDetailViewModel.UIState.Success).beerDetail.brewery.id.toString()))
+                }
+            ),
+            ratingSection = RatingSection()
+        )
     }
 
-    @Composable
-    private fun Detail(
-        descriptionSection: @Composable () -> Unit,
-        propertiesSection: @Composable ColumnScope.() -> Unit,
-        brewerSection: @Composable ColumnScope.() -> Unit,
-        ratingSection: @Composable ColumnScope.() -> Unit,
-        modifier: Modifier = Modifier
+    LaunchedEffect(key1 = FetchBeerKey) {
+        viewModel.getBeer(bid)
+    }
+}
+
+@Composable
+private fun Detail(
+    descriptionSection: @Composable () -> Unit,
+    propertiesSection: @Composable ColumnScope.() -> Unit,
+    brewerSection: @Composable ColumnScope.() -> Unit,
+    ratingSection: @Composable ColumnScope.() -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(horizontal = 16.dp)
+            .verticalScroll(rememberScrollState()),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        Column(
-            modifier = modifier
-                .fillMaxSize()
-                .padding(horizontal = 16.dp)
-                .verticalScroll(rememberScrollState()),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            descriptionSection()
-            propertiesSection()
-            brewerSection()
-            ratingSection()
-        }
+        descriptionSection()
+        propertiesSection()
+        brewerSection()
+        ratingSection()
     }
 }
 

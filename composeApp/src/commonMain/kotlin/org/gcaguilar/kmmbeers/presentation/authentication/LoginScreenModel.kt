@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 sealed class AuthenticationEvents {
-    data object MakeLogin : AuthenticationEvents()
+    data object MakeGoogleAuthentication : AuthenticationEvents()
     data object LoggedIn : AuthenticationEvents()
 }
 
@@ -34,17 +34,26 @@ class LoginScreenModel(
         }
         viewModelScope.launch {
             if (!isLoggedIn()) {
-                authenticate()
-            }
-
-            _state.update {
-                it.copy(
-                    events = AuthenticationEvents.LoggedIn
-                )
+                _state.update {
+                    it.copy(
+                        events = AuthenticationEvents.MakeGoogleAuthentication
+                    )
+                }
+            } else {
+                _state.update {
+                    it.copy(
+                        events = AuthenticationEvents.LoggedIn
+                    )
+                }
             }
         }
     }
 
+    fun makeAuthentication() {
+        viewModelScope.launch {
+            authenticate()
+        }
+    }
 
     fun processNavigation() {
         _state.update {

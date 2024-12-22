@@ -18,7 +18,7 @@ import org.gcaguilar.kmmbeers.presentation.search.SearchScreenModel
 import org.gcaguilar.kmmbeers.presentation.splash.SplashScreenModel
 import org.gcaguilar.kmmbeers.presentation.beer.BeerDetailViewModel
 import org.gcaguilar.kmmbeers.presentation.brewery.BreweryDetailViewModel
-import org.koin.compose.viewmodel.dsl.viewModelOf
+import org.koin.core.module.dsl.viewModelOf
 
 val presentationModule = module {
     viewModelOf(::SearchScreenModel)

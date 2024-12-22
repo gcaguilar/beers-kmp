@@ -4,30 +4,46 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import cafe.adriel.voyager.core.screen.Screen
-import cafe.adriel.voyager.navigator.LocalNavigator
-import cafe.adriel.voyager.navigator.currentOrThrow
-import org.gcaguilar.kmmbeers.presentation.search.SearchScreen
+import com.mmk.kmpauth.firebase.google.GoogleButtonUiContainerFirebase
+import com.mmk.kmpauth.google.GoogleAuthCredentials
+import com.mmk.kmpauth.google.GoogleAuthProvider
+import com.mmk.kmpauth.uihelper.google.GoogleSignInButtonIconOnly
+//import com.mmk.kmpauth.firebase.google.GoogleButtonUiContainerFirebase
+//import com.mmk.kmpauth.google.GoogleAuthCredentials
+//import com.mmk.kmpauth.google.GoogleAuthProvider
+//import com.mmk.kmpauth.uihelper.google.GoogleSignInButtonIconOnly
 import org.koin.compose.viewmodel.koinViewModel
-import org.koin.core.annotation.KoinExperimentalAPI
 
 private const val FetchAuthenticationUrlKey = "FetchUri"
 
-object LoginScreen : Screen {
-    @OptIn(KoinExperimentalAPI::class)
-    @Composable
-    override fun Content() {
-        val screenModel = koinViewModel<LoginScreenModel>()
-        val state by screenModel.state.collectAsState()
-        val navigator = LocalNavigator.currentOrThrow
+@Composable
+fun LoginScreen() {
+    val screenModel = koinViewModel<LoginScreenModel>()
+    val state by screenModel.state.collectAsState()
+    GoogleAuthProvider.create(credentials = GoogleAuthCredentials(serverId = "550364172787-1he86uhtnthdhron339d94m7tb38om9d.apps.googleusercontent.com"))
 
-        LaunchedEffect(Unit) {
-            screenModel.checkStatus()
-        }
+    LaunchedEffect(Unit) {
+        screenModel.checkStatus()
+    }
 
-        state.events?.let {
-            navigator.replace(SearchScreen)
-            screenModel.processNavigation()
-        }
+//    screenModel.state.value.events?.let { it ->
+//        when (it) {
+//            AuthenticationEvents.LoggedIn -> {
+//                //navigator.replace(SearchScreen)
+//                screenModel.processNavigation()
+//            }
+//
+//            else -> {
+    GoogleButtonUiContainerFirebase(onResult = { authResult ->
+        authResult.fold({
+
+        }, {
+
+        })
+    }, linkAccount = true) {
+        GoogleSignInButtonIconOnly(onClick = { this.onClick() })
     }
 }
+//        }
+//    }
+//}

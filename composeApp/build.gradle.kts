@@ -1,8 +1,6 @@
 import org.jetbrains.compose.ExperimentalComposeLibrary
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import java.io.FileInputStream
-import java.util.*
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -36,12 +34,10 @@ kotlin {
     sourceSets {
 
         androidMain.dependencies {
-            implementation(libs.compose.ui.tooling)
             implementation(libs.androidx.activity.compose)
             implementation(libs.ktor.client.android)
             implementation(libs.koin.android)
-            implementation(libs.firebase.ktx)
-            implementation(libs.firebase.auth.ktx)
+            implementation(project.dependencies.platform(libs.firebase.bom))
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -60,13 +56,10 @@ kotlin {
             implementation(libs.bundles.koin)
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.kamel.image)
-            implementation(libs.voyager.navigator)
-            implementation(libs.voyager.koin)
-            implementation(libs.voyager.lifecycle)
             implementation(libs.koin.compose)
             implementation(libs.oidc.appsupport)
-            implementation(project.dependencies.platform(libs.firebase.bom))
             implementation(libs.bundles.firebase)
+            implementation(libs.bundles.kmp)
         }
 
         commonTest.dependencies {
@@ -116,6 +109,11 @@ android {
     }
     dependencies {
         debugImplementation(compose.uiTooling)
+    }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 }
 

@@ -1,10 +1,14 @@
 package org.gcaguilar.kmmbeers.di
 
+import co.touchlab.kermit.Logger
+import dev.gitlive.firebase.Firebase
+import dev.gitlive.firebase.FirebaseApp
 import org.gcaguilar.kmmbeers.domain.*
 import io.ktor.client.*
 import io.ktor.client.plugins.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.plugins.logging.*
+import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.json.Json
 import org.gcaguilar.kmmbeers.data.*
@@ -121,7 +125,15 @@ val networkModule = module {
                     isLenient = true
                 })
             }
-            install(Logging)
+            install(Logging) {
+                logger = object : io.ktor.client.plugins.logging.Logger {
+                    override fun log(message: String) {
+                        Logger.d("HTTP Client", null, message)
+                    }
+                }
+                level = LogLevel.ALL
+                sanitizeHeader { header -> header == HttpHeaders.Authorization }
+            }
         }
     }
 }

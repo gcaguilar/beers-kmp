@@ -9,6 +9,7 @@ plugins {
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.kotlinSerialization)
     alias(libs.plugins.detekt)
+    alias(libs.plugins.gms)
 }
 
 kotlin {
@@ -50,7 +51,7 @@ kotlin {
             implementation(libs.ktor.client.core)
             implementation(libs.ktor.client.mock)
             implementation(libs.ktor.client.loggin)
-            implementation(libs.napier)
+            implementation(libs.touchlab.kremit)
             implementation(libs.ktor.serialization.kotlinx.json)
             implementation(libs.ktor.client.content.negotiation)
             implementation(libs.bundles.koin)
@@ -60,6 +61,8 @@ kotlin {
             implementation(libs.oidc.appsupport)
             implementation(libs.bundles.firebase)
             implementation(libs.bundles.kmp)
+            implementation(libs.jetbrains.navigator)
+            implementation(libs.passage)
         }
 
         commonTest.dependencies {
@@ -107,7 +110,11 @@ android {
     buildFeatures {
         compose = true
     }
+    compileOptions {
+        isCoreLibraryDesugaringEnabled = true
+    }
     dependencies {
+        coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
         debugImplementation(compose.uiTooling)
     }
 

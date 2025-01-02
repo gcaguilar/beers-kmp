@@ -9,12 +9,18 @@ import org.publicvalue.multiplatform.oidc.appsupport.PlatformCodeAuthFlow
 import org.publicvalue.multiplatform.oidc.tokenstore.IosKeychainTokenStore
 import org.publicvalue.multiplatform.oidc.tokenstore.TokenStore
 import kotlin.experimental.ExperimentalObjCRefinement
+import io.ktor.client.engine.darwin.Darwin
 
 @OptIn(ExperimentalOpenIdConnect::class)
 actual val platform: Module = module {
     factory<CodeAuthFlowFactory> { IosCodeAuthFlowFactory() }
     factory<TokenStore> { IosKeychainTokenStore() }
+
+    single {
+        createHttpClient(Darwin)
+    }
 }
+
 
 @OptIn(ExperimentalObjCRefinement::class)
 @HiddenFromObjC

@@ -1,9 +1,9 @@
 package org.gcaguilar.kmmbeers.di
 
-import co.touchlab.kermit.Logger
 import dev.gitlive.firebase.Firebase
 import org.gcaguilar.kmmbeers.domain.*
 import io.ktor.client.*
+import io.ktor.client.engine.*
 import io.ktor.client.plugins.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.plugins.logging.*
@@ -22,6 +22,9 @@ import org.gcaguilar.kmmbeers.presentation.splash.SplashViewModel
 import org.gcaguilar.kmmbeers.presentation.beer.BeerDetailViewModel
 import org.gcaguilar.kmmbeers.presentation.brewery.BreweryDetailViewModel
 import org.koin.core.module.dsl.viewModelOf
+import co.touchlab.kermit.Logger as KremitLogger
+
+private const val USER_AGENT = "BeersKMM D912C0B80A28A04F4EA2FD48E625853326BEAB1C"
 
 val presentationModule = module {
     viewModelOf(::SearchViewModel)
@@ -115,31 +118,26 @@ val dataModule = module {
     }
 }
 
-val networkModule = module {
-    single(named("UserAgent")) { "BeersKMM D912C0B80A28A04F4EA2FD48E625853326BEAB1C" }
-
-    single {
-        HttpClient {
-            install(UserAgent) {
-                agent = get(named(("UserAgent")))
-            }
-            install(ContentNegotiation) {
-                json(Json {
-                    ignoreUnknownKeys = true
-                    prettyPrint = true
-                    isLenient = true
-                })
-            }
-            install(Logging) {
-                logger = object : io.ktor.client.plugins.logging.Logger {
-                    override fun log(message: String) {
-                        Logger.d("HTTP Client", null, message)
-                    }
+fun createHttpClient(engine: HttpClientEngineFactory<*>): HttpClient {
+    return HttpClient(engine) {
+        install(UserAgent) {
+            agent = USER_AGENT
+        }
+        install(ContentNegotiation) {
+            json(Json {
+                ignoreUnknownKeys = true
+                prettyPrint = true
+                isLenient = true
+            })
+        }
+        install(Logging) {
+            logger = object : Logger {
+                override fun log(message: String) {
+                    KremitLogger.d("HTTP Client", null, message)
                 }
-                level = LogLevel.ALL
-                sanitizeHeader { header -> header == HttpHeaders.Authorization }
             }
+            level = LogLevel.ALL
+            sanitizeHeader { header -> header == HttpHeaders.Authorization }
         }
     }
 }
-

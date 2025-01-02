@@ -1,9 +1,16 @@
 package org.gcaguilar.kmmbeers.domain
 
+import com.github.michaelbull.result.Result
+import com.github.michaelbull.result.mapError
+
 class Authenticate(
     private val authenticationRepository: AuthenticationRepository
 ) {
-    suspend operator fun invoke() {
-        return authenticationRepository.authenticate()
+    data object AuthenticationError
+
+    suspend operator fun invoke(): Result<Unit, AuthenticationError> {
+        return authenticationRepository.authenticate().mapError {
+            AuthenticationError
+        }
     }
 }

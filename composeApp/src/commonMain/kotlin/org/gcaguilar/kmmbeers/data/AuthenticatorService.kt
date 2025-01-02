@@ -1,24 +1,26 @@
 package org.gcaguilar.kmmbeers.data
 
+import com.github.michaelbull.result.Err
+import com.github.michaelbull.result.Ok
 import io.ktor.client.request.*
 import io.ktor.client.request.forms.*
 import io.ktor.client.utils.*
 import io.ktor.http.*
 import org.publicvalue.multiplatform.oidc.OpenIdConnectClient
 import org.publicvalue.multiplatform.oidc.appsupport.CodeAuthFlowFactory
+import com.github.michaelbull.result.Result
 
 interface AuthenticatorService {
-    suspend fun authenticate(): Result<String>
+    suspend fun authenticate(clientId: String, clientSecret: String): Result<String, Throwable>
 }
 
 class AuthenticationServiceImpl(
-    private val fireStoreService: FireStoreService,
     private val client: OpenIdConnectClient,
     private val codeAuthFlowFactory: CodeAuthFlowFactory
 ) : AuthenticatorService {
-    override suspend fun authenticate(): Result<String> {
-        client.config.clientId = fireStoreService.clientId()
-        client.config.clientSecret = fireStoreService.clientSecret()
+    override suspend fun authenticate(clientId: String, clientSecret: String): Result<String, Throwable> {
+        client.config.clientId = clientId
+        client.config.clientSecret = clientSecret
 
         return try {
             val response = codeAuthFlowFactory.createAuthFlow(client)
@@ -38,9 +40,9 @@ class AuthenticationServiceImpl(
                         setBody(EmptyContent)
                     }
                 )
-            Result.success(response.access_token)
+            Ok(response.access_token)
         } catch (e: Exception) {
-            Result.failure(e)
+            Err(e)
         }
     }
 }

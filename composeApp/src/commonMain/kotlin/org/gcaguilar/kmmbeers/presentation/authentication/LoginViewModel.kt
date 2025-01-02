@@ -2,6 +2,8 @@ package org.gcaguilar.kmmbeers.presentation.authentication
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.github.michaelbull.result.fold
+import com.github.michaelbull.result.onFailure
 import org.gcaguilar.kmmbeers.domain.Authenticate
 import org.gcaguilar.kmmbeers.domain.IsLoggedIn
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,7 +16,7 @@ sealed class AuthenticationEvents {
     data object LoggedIn : AuthenticationEvents()
 }
 
-class LoginScreenModel(
+class LoginViewModel(
     private val isLoggedIn: IsLoggedIn,
     private val authenticate: Authenticate
 ) : ViewModel() {
@@ -52,14 +54,17 @@ class LoginScreenModel(
     fun makeAuthentication() {
         viewModelScope.launch {
             authenticate()
-        }
-    }
+                .fold(
+                    success = {
+                        _state.update {
+                            it.copy(
+                                events = AuthenticationEvents.LoggedIn
+                            )
+                        }
+                    },
+                    failure = {
 
-    fun processNavigation() {
-        _state.update {
-            it.copy(
-                events = null
-            )
+                    })
         }
     }
 }

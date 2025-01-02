@@ -17,7 +17,7 @@ captures
 !*.xcodeproj/project.xcworkspace/
 !*.xcworkspace/contents.xcworkspacedata
 **/xcshareddata/WorkspaceSettings.xcsettings
-composeApp/src/google-services.json
+composeApp/google-services.json
 iosApp/Configuration/GoogleService-Info.plist
 Package.resolved
 iosApp/iosApp/Info.plist

@@ -2,14 +2,6 @@ package org.gcaguilar.kmmbeers.di
 
 import co.touchlab.kermit.Logger
 import dev.gitlive.firebase.Firebase
-//import dev.gitlive.firebase.Firebase
-//import dev.gitlive.firebase.FirebaseApp
-//import io.github.jan.supabase.auth.Auth
-//import io.github.jan.supabase.compose.auth.ComposeAuth
-//import io.github.jan.supabase.compose.auth.appleNativeLogin
-//import io.github.jan.supabase.compose.auth.googleNativeLogin
-//import io.github.jan.supabase.createSupabaseClient
-//import io.github.jan.supabase.postgrest.Postgrest
 import org.gcaguilar.kmmbeers.domain.*
 import io.ktor.client.*
 import io.ktor.client.plugins.*

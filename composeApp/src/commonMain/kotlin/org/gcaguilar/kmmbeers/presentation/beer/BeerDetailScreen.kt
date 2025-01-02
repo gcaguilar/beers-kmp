@@ -1,13 +1,7 @@
 package org.gcaguilar.kmmbeers.presentation.beer
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ColumnScope
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
@@ -19,7 +13,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import org.gcaguilar.kmmbeers.presentation.brewery.BreweryDetail
+import org.gcaguilar.kmmbeers.presentation.Screen
 import org.gcaguilar.kmmbeers.presentation.ui.HeadingTextBlock
 import org.gcaguilar.kmmbeers.presentation.ui.InfoSection
 import org.gcaguilar.kmmbeers.presentation.ui.Rating
@@ -28,8 +22,9 @@ import org.koin.compose.viewmodel.koinViewModel
 private const val FetchBeerKey = "Beer"
 
 @Composable
-fun DetailScreen(
-    bid: String
+fun BeerDetailScreen(
+    bid: String,
+    navigate: (String) -> Unit
 ) {
     val viewModel = koinViewModel<BeerDetailViewModel>()
     val state by viewModel.state.collectAsState()
@@ -53,7 +48,9 @@ fun DetailScreen(
             brewerSection = BrewerSection(
                 brewerName = (state as BeerDetailViewModel.UIState.Success).beerDetail.brewery.name,
                 onClick = {
-                    // navigator.push(BreweryDetail(id = (state as BeerDetailViewModel.UIState.Success).beerDetail.brewery.id.toString()))
+                    navigate(
+                        Screen.BreweryDetail.createRoute((state as BeerDetailViewModel.UIState.Success).beerDetail.brewery.id.toString())
+                    )
                 }
             ),
             ratingSection = RatingSection()

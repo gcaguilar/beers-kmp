@@ -22,7 +22,7 @@ private const val FetchBreweryKey = "FetchBrewery"
 
 @Composable
 
-fun BreweryDetail(id: String) {
+fun BreweryDetail(id: String, navigate: (String) -> Unit) {
     val viewModel = koinViewModel<BreweryDetailViewModel>()
     val state by viewModel.state.collectAsState()
 

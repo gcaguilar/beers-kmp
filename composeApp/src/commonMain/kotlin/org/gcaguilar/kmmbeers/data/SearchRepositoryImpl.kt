@@ -1,5 +1,6 @@
 package org.gcaguilar.kmmbeers.data
 
+import dev.gitlive.firebase.firestore.FirebaseFirestore
 import org.gcaguilar.kmmbeers.domain.BeerDetail
 import org.gcaguilar.kmmbeers.domain.BeersWithPagination
 import org.gcaguilar.kmmbeers.domain.Brewery

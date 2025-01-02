@@ -43,11 +43,10 @@ fun BeerItem(
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             KamelImage(
-                resource = asyncPainterResource(image),
+                { asyncPainterResource(image) }, contentDescription = "data.Beer image",
                 modifier = Modifier.clip(RoundedCornerShape(8.dp))
                     .height(100.dp)
                     .fillMaxWidth(),
-                contentDescription = "data.Beer image",
                 contentScale = ContentScale.Fit
             )
             Text(
@@ -60,7 +59,7 @@ fun BeerItem(
             )
             Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
                 Text(
-                    text = "${abv} - ${ibu} IBU",
+                    text = "$abv - $ibu IBU",
                     style = MaterialTheme.typography.bodySmall,
                 )
             }

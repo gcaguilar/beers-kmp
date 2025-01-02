@@ -23,10 +23,9 @@ fun InfoSection(
         modifier = modifier,
     ) {
         KamelImage(
+            { asyncPainterResource(imageUrl) }, contentDescription = "",
             modifier = Modifier.fillMaxWidth()
                 .height(100.dp),
-            resource = asyncPainterResource(imageUrl),
-            contentDescription = "",
             contentScale = ContentScale.Fit
         )
         Text(

@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import org.gcaguilar.kmmbeers.domain.Beer
 import org.gcaguilar.kmmbeers.domain.BeersWithPagination
 import org.gcaguilar.kmmbeers.domain.SearchBeer
-import io.github.aakira.napier.Napier
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -16,7 +15,7 @@ sealed class SearchErrorType {
     data object Unknown : SearchErrorType()
 }
 
-class SearchScreenModel(
+class SearchViewModel(
     private val searchBeer: SearchBeer,
 ) : ViewModel() {
     private val _state = MutableStateFlow(UIState())
@@ -101,7 +100,7 @@ class SearchScreenModel(
     }
 
     private fun onFailureSearchResult(error: Throwable) {
-        Napier.e("Error while searching $error")
+        // Napier.e("Error while searching $error")
         _state.update {
             state.value.copy(
                 error = SearchErrorType.Unknown, isLoading = false, isRequestingMoreItems = false, searchResult = null

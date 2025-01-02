@@ -23,7 +23,6 @@ class SplashViewModel(
     fun isLogged() {
         viewModelScope.launch {
             val loggedIn = isLoggedIn()
-            Logger.d(loggedIn.toString())
             _state.update { state ->
                 state.copy(isLoggedIn = loggedIn)
             }

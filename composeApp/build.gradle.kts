@@ -58,7 +58,7 @@ kotlin {
             implementation(libs.ktor.client.content.negotiation)
             implementation(libs.bundles.koin)
             implementation(libs.kotlinx.coroutines.core)
-            implementation(libs.kamel.image)
+            implementation(libs.coil)
             implementation(libs.koin.compose)
             implementation(libs.oidc.appsupport)
             implementation(libs.bundles.firebase)

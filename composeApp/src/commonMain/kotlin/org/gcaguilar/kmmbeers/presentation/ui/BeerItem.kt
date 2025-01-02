@@ -17,8 +17,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
-import io.kamel.image.KamelImage
-import io.kamel.image.asyncPainterResource
+import co.touchlab.kermit.Logger
+import coil3.compose.AsyncImage
 
 @Composable
 fun BeerItem(
@@ -42,8 +42,14 @@ fun BeerItem(
                 .fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-            KamelImage(
-                { asyncPainterResource(image) }, contentDescription = "data.Beer image",
+            Logger.d(
+                tag = "TAG",
+                throwable = null,
+                messageString = image
+            )
+            AsyncImage(
+                model = image,
+                contentDescription = "data.Beer image",
                 modifier = Modifier.clip(RoundedCornerShape(8.dp))
                     .height(100.dp)
                     .fillMaxWidth(),

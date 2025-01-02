@@ -9,8 +9,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
-import io.kamel.image.KamelImage
-import io.kamel.image.asyncPainterResource
+import co.touchlab.kermit.Logger
+import coil3.compose.AsyncImage
 
 @Composable
 fun InfoSection(
@@ -22,11 +22,20 @@ fun InfoSection(
     Column(
         modifier = modifier,
     ) {
-        KamelImage(
-            { asyncPainterResource(imageUrl) }, contentDescription = "",
+        Logger.d(
+            tag = "TAG",
+            throwable = null,
+            messageString = imageUrl
+        )
+        AsyncImage(
+            model = imageUrl,
+            contentDescription = "",
             modifier = Modifier.fillMaxWidth()
                 .height(100.dp),
-            contentScale = ContentScale.Fit
+            contentScale = ContentScale.Fit,
+            onError = {
+                Logger.d(tag = "TAG", throwable = null, messageString = "ERROR")
+            }
         )
         Text(
             modifier = Modifier.fillMaxWidth(),

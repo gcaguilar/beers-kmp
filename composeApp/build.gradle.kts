@@ -1,6 +1,7 @@
 import org.jetbrains.compose.ExperimentalComposeLibrary
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.plugin.mpp.NativeBuildType
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -30,6 +31,7 @@ kotlin {
             baseName = "ComposeApp"
             isStatic = true
         }
+
     }
 
     sourceSets {
@@ -60,9 +62,9 @@ kotlin {
             implementation(libs.koin.compose)
             implementation(libs.oidc.appsupport)
             implementation(libs.bundles.firebase)
-            implementation(libs.bundles.kmp)
             implementation(libs.jetbrains.navigator)
             implementation(libs.passage)
+            implementation(libs.kotlin.result)
         }
 
         commonTest.dependencies {

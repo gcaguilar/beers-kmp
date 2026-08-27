@@ -18,7 +18,7 @@ firebaseBom = "33.2.0"
 firebase = "2.1.0"
 googleServices = "4.4.2"
 navigator = "2.8.0-alpha10"
-passage = "1.1.0"
+passage = "1.8.1"
 kremit = "2.0.5"
 kotlin-result = "2.0.1"
 
